@@ -34,9 +34,7 @@ const JoinLobby = ({socket}) => {
         console.log(parsed)
         if(parsed.status===200){
             localStorage.setItem("lobby", JSON.stringify(parsed.lobbyId));
-            localStorage.setItem("user", JSON.stringify(parsed.userName));
             setCurrentLobby(parsed.lobbyId);
-            setCurrentUser(parsed.userName);
             navigate("/waitingroom")
         }
     });
@@ -48,7 +46,6 @@ console.log(currentUser)
         <Container>
           <Form onSubmit={joinLobby}>
             <label>LobbyID: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setCurrentLobby(e.target.value)}></input>
-            <label>UserName: </label><input type="text" id="Username" autoComplete="off" onChange={(e) => setUserName(e.target.value)}></input>
             <Button>Submit</Button>
           </Form>
         </Container>
@@ -75,6 +72,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin:0;
+  overflow: hidden;
+  height: 100vh;
 `;
 
 const Sets = styled.li`

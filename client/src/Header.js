@@ -1,25 +1,36 @@
 import { styled } from "styled-components";
 import cards from "./Assets/card-game.png";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import {UserContext} from "./UserContext"
 
 
 const Header = () => {
 
-//     return (
-//     <>
-//     <HeaderBox>
-//     <Left>
-//         <Logo src={cards}/>
-//     </Left>
-//     <Middle>
-//         <MainSiteLink to="/">Draft Site</MainSiteLink>
-//     </Middle>
-//     <Right>
-//         <SignInLink to="/SignIn">Sign In</SignInLink>
-//     </Right>
-//     </HeaderBox>
-//     </>
-// )
+    const {currentUser, setCurrentUser, loggedInUser} = useContext(UserContext)
+
+    const signOut = (event) => {
+        event.preventDefault()
+        localStorage.removeItem("user");
+        setCurrentUser(null);
+    }
+
+    return (
+    <>
+    {/* <HeaderBox>
+    <Left>
+        <Logo src={cards}/>
+    </Left>
+    <Middle>
+        <MainSiteLink to="/">Draft Site</MainSiteLink>
+    </Middle>
+    <Right>
+        <SignInLink to="/signin">{currentUser ? `Hello ${loggedInUser}` : "Sign In"}</SignInLink>
+        <SignOutLink to="/" onClick={signOut}>{currentUser && "Sign Out"}</SignOutLink>
+    </Right>
+    </HeaderBox> */}
+    </>
+)
 }
 
 export default Header;
@@ -60,6 +71,13 @@ text-decoration: none;
 `
 
 const SignInLink = styled(Link)`
+display: flex;
+font-size: 2.5rem;
+color: black;
+text-decoration: none;
+`
+
+const SignOutLink = styled(Link)`
 display: flex;
 font-size: 2.5rem;
 color: black;

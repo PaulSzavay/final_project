@@ -20,20 +20,20 @@ export const UserProvider = ({children}) => {
 // this is used for the header form. When a user signs in they will have a "Hello Message"
 const [loggedInUser, setLoggedInUser] = useState("");
 
-// useEffect(()=>(
-//   currentUser && 
-//   fetch(`/api/user/${currentUser}`)
-//   .then((response) => response.json())
-//   .then((parsed) => {
-//     if(parsed.status === 200){
-//       localStorage.setItem("user", JSON.stringify(parsed.data._id))
-//       setLoggedInUser(parsed.data.name)
-//     }
-//     })
-//   .catch((error) => {
-//       console.log(error)
-//   })
-//   ),[currentUser]);
+useEffect(()=>{
+  currentUser && 
+  fetch(`/api/user/${currentUser}`)
+  .then((response) => response.json())
+  .then((parsed) => {
+    if(parsed.status === 200){
+      localStorage.setItem("user", JSON.stringify(parsed.data.email))
+      setLoggedInUser(parsed.data.name)
+    }
+    })
+  .catch((error) => {
+      console.log(error)
+  })
+},[currentUser]);
 
 // passing currentUser, setCurrentUser, loggedInUser, setLoggedInUser to all children
   return (

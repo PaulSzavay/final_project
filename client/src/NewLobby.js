@@ -14,7 +14,7 @@ const NewLobby = () => {
   const navigate = useNavigate()
 
   const {setCurrentLobby} = useContext(LobbyContext);
-  const {setCurrentUser} = useContext(UserContext)
+  const {currentUser, setCurrentUser} = useContext(UserContext)
 
   // promise.all
 
@@ -22,7 +22,7 @@ const NewLobby = () => {
     event.preventDefault();
       fetch("/api/createlobby", {
         method: "POST",
-        body: JSON.stringify({userName, booster1, booster2, booster3}),
+        body: JSON.stringify({userName:currentUser, booster1, booster2, booster3}),
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
@@ -33,9 +33,7 @@ const NewLobby = () => {
           console.log(parsed)
           if(parsed.status===201){
             localStorage.setItem("lobby", JSON.stringify(parsed.newLobby.insertedId));
-            localStorage.setItem("user", JSON.stringify(parsed.userName));
             setCurrentLobby(parsed.newLobby.insertedId);
-            setCurrentUser(parsed.userName)
             navigate("/waitingroom");
           }
         });
@@ -90,7 +88,6 @@ const NewLobby = () => {
     <>
         <Container>
           <Form onSubmit={addPack}>
-            <label>Username: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setUserName(e.target.value)}></input>
             <label>Pack1: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setBooster1(e.target.value)}></input>
             <label>Pack2: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setBooster2(e.target.value)}></input>
             <label>Pack3: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setBooster3(e.target.value)}></input>
@@ -132,6 +129,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin:0;
+  overflow: hidden;
+  height: 100vh;
 `;
 
 const Sets = styled.li`

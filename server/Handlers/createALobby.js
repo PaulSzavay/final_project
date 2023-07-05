@@ -15,6 +15,7 @@ const options = {
 const createLobby = async (request, response) => {
   const { userName, booster1, booster2, booster3 } = request.body;
 
+
   const client = new MongoClient(MONGO_URI, options);
 
   try {

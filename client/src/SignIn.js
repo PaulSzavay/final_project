@@ -5,52 +5,65 @@ import { UserContext } from "./UserContext";
 
 const SignIn = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const navigate = useNavigate()
 
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
-  const [data, setData] = useState({});
+  // const [data, setData] = useState({});
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("/api/users")
-      .then((response) => response.json())
-      .then((parsed) => {
-        setData(parsed.data);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("/api/users")
+  //     .then((response) => response.json())
+  //     .then((parsed) => {
+  //       setData(parsed.data);
+  //     });
+  // }, []);
 
-  let _id = null;
+
+  // console.log(data)
+
+  // let _id = null;
   const handleClick = (event) => {
     event.preventDefault();
 
-    if (password !== "" && email !== "") {
-      const foundUser = data.find((user) => {
-        return password === user.password && email === user.email;
-      });
-      _id = foundUser._id;
-    }
+    // if (password !== "" && email !== "") {
+    //   const foundUser = data.find((user) => {
+    //     return password === user.password && email === user.email;
+    //   });
+    //   _id = foundUser._id;
+    // }
 
-    fetch(`/api/user/${_id}`)
+    fetch("/api/signin", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
       .then((response) => response.json())
       .then((parsed) => {
-        if (parsed.status === 200) {
-          localStorage.setItem("user", JSON.stringify(parsed.data._id));
-          setCurrentUser(parsed.data._id);
-          navigate("/");
+        if(parsed.status===200){
+          setCurrentUser(parsed.data)
+          localStorage.setItem("user", JSON.stringify(parsed.data))
+          navigate("/")
         }
       })
       .catch((error) => {
         window.alert(error);
       });
-  };
+    }
+
 
   useEffect(() => {
-    if (currentUser) return navigate("/");
+    if (currentUser) 
+    {navigate("/")}
   }, [currentUser]);
 
-  // fetch (post) to push user info into database
+
 
   return (
     <>

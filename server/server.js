@@ -15,14 +15,42 @@ const {createLobby} = require("./Handlers/createALobby")
 const {getABooster} = require("./Handlers/getABoosterPack");
 const { joinALobby } = require('./Handlers/joinALobby');
 const { createUser } = require('./Handlers/createUser');
-const { getLobby } = require('./Handlers/getLobby');
+const { readyCheck } = require('./Handlers/readyCheck');
+const { getUser } = require('./Handlers/getUser');
+const { getUsers } = require('./Handlers/getUsers');
+const { signIn } = require('./Handlers/signIn');
+const { signUp } = require('./Handlers/signUp');
+const { lobbyCheck } = require('./Handlers/LobbyCheck');
+const { partyLeaderCheck } = require('./Handlers/partyLeaderCheck');
+const { fillLobby } = require('./Handlers/fillLobby');
+const { findLobby } = require('./Handlers/findLobby');
+const { findPacks } = require('./Handlers/findPacks');
+
 
 
 app.get('/helloworld', (req, res) => {
   res.status(200).json({status:200, message:"Hello World!"})
 })
 
-app.post("/api/lobby", getLobby)
+app.post("/api/signin", signIn)
+
+app.post("/api/signup", signUp)
+
+app.post("/api/partyleadercheck", partyLeaderCheck)
+
+app.post("/api/lobbycheck", lobbyCheck)
+
+app.post("/api/filllobby", fillLobby)
+
+app.post("/api/findlobby", findLobby)
+
+app.post("/api/findpacks", findPacks)
+
+app.get("/api/users", getUsers)
+
+app.get("/api/user/:email", getUser)
+
+app.post("/api/lobby", readyCheck)
 
 app.post("/api/createuser", createUser)
 

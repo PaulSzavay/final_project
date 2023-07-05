@@ -12,10 +12,11 @@ const options = {
   useUnifiedTopology: true,
 };
 
-const getLobby = async (request, response) => {
+const readyCheck = async (request, response) => {
     console.log(request.body)
 
-    const { _id, userName } = request.body
+    const { _id, userName, isReady } = request.body
+    console.log(isReady)
 
 
     const client = new MongoClient(MONGO_URI, options);
@@ -25,10 +26,10 @@ const getLobby = async (request, response) => {
       const db = client.db("MTGDraft");
 
       const foundLobby = await db.collection("Lobby").findOne({ _id } );
-      console.log(foundLobby)
+      // console.log(foundLobby)
 
       const query = {_id, "players.userName": userName}
-      const change = { $set: { "players.$.isReady": true}}
+      const change = { $set: { "players.$.isReady": isReady }}
 
       const readyPlayer = await db.collection("Lobby").updateOne( query, change );
       console.log(readyPlayer)
@@ -42,4 +43,4 @@ const getLobby = async (request, response) => {
     }
   };
   
-  module.exports = {getLobby};
+  module.exports = {readyCheck};

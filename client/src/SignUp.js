@@ -12,18 +12,19 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("")
 
 
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser, setLoggedInUser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentUser) return navigate("/");
+    if (currentUser) 
+    {navigate("/")}
   }, [currentUser]);
 
   // fetch (post) to push user info into database
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("/api/createuser", {
+    fetch("/api/signup", {
       method: "POST",
       body: JSON.stringify({ firstName, lastName, email, password }),
       headers: {
@@ -34,8 +35,11 @@ const SignUp = () => {
       .then((response) => response.json())
       .then((parsed) => {
         console.log(parsed)
-        if (parsed.status === 200) {
-          localStorage.setItem("user", JSON.stringify(parsed.userId));
+        if (parsed.status === 201) {
+          localStorage.setItem("user", JSON.stringify(parsed.data.email));
+          setCurrentUser(parsed.data.email)
+          setLoggedInUser(parsed.data.name)
+          navigate("/")
         } else if (parsed.status === 400) {
           setErrorMessage("Email is already taken. Please choose a different email.");
         }
@@ -46,7 +50,8 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    if (currentUser) return navigate("/");
+    if (currentUser) 
+    {navigate("/")}
   }, [currentUser]);
 
   return (

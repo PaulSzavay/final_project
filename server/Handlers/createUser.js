@@ -42,7 +42,7 @@ const createUser = async (request, response) => {
     password,
     email
     };
-    const createUser = await db.collection("users").insertOne(user);
+    const createUser = await db.collection("Users").insertOne(user);
     
     createUser
     ? response.status(200).json({
