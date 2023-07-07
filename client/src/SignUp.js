@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "./UserContext";
+import SignUpBackground from "./Assets/SignInBackground2.jpg";
 
 const SignUp = () => {
   // useState used to keep the values of names, email and password to be used in the fetch POST
@@ -106,15 +107,15 @@ const SignUp = () => {
 export default SignUp;
 
 const Container = styled.section`
-  margin: auto;
-  margin-top: 5rem;
-  margin-bottom: 5rem;
-  padding: 4em 2em;
-  width: 500px;
+  color:rgb(227, 204, 174);
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-secondary);
+  background-image: url(${SignUpBackground});
+    /* Photo by Peter Gargiulo on Unsplash */
+  background-size: cover;
+  height: 100vh;
 `;
 
 const Form = styled.form`
@@ -130,8 +131,9 @@ const FormBox = styled.div`
 `;
 
 const LabelTitle = styled.p`
-  font-size: 1.3rem;
+  font-size: 1.75rem;
   margin-bottom: 0;
+  margin-left: 1rem;
 `;
 
 const SignUpTitle = styled.h1`
@@ -142,47 +144,44 @@ const SignUpTitle = styled.h1`
 `;
 
 const Input = styled.input`
+  font-family: 'Monomaniac One', sans-serif;
   font-size: 2rem;
   margin: 1rem;
+  width: 30rem;
+  background-color: rgb(227, 204, 174);
   &:focus {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid white;
   }
 `;
 
 const ErrorMessage = styled.p`
+margin-left: 1rem;
 `
 
 const SignUpButton = styled.button`
   align-items: center;
-  background-color: var(--color-primary);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: black;
+  border: 1px solid darkgrey;
   border-radius: .25rem;
   box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
   box-sizing: border-box;
-  color: var(--color-secondary);
+  color: rgb(227, 204, 174);
   cursor: pointer;
-  display: inline-flex;
-  font-family: 'Raleway', sans-serif;
-  font-size: 16px;
+  font-family: 'Monomaniac One', sans-serif;
+  font-size: 1.75rem;
   font-weight: 600;
-  justify-content: center;
   line-height: 1.25;
   margin: 0;
-  min-height: 3rem;
-  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  padding: 0.75rem;
   text-decoration: none;
   transition: all 250ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: baseline;
   width: 10rem;
 
 &:hover,
 &:focus {
   border-color: rgba(0, 0, 0, 0.15);
   box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
-  color:  rgba(239,222,205,0.65);
+  opacity: 0.75;
 }
 
 &:hover {
@@ -193,7 +192,6 @@ const SignUpButton = styled.button`
 &:active {
   border-color: rgba(0, 0, 0, 0.15);
   box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
-  color: var(--color-secondary);
   transform: translateY(0);
 }
 `;

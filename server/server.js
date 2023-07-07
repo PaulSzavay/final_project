@@ -27,6 +27,8 @@ const { findLobby } = require('./Handlers/findLobby');
 const { findPacks } = require('./Handlers/findPacks');
 const { pickACard } = require('./Handlers/pickACard');
 const { testDraftStarted } = require('./Handlers/testToStartDraft');
+const { UpToDate } = require('./Handlers/UpToDate');
+const { findLobbyWithLobbyId } = require('./Handlers/findLobbyWithLobbyId');
 
 
 
@@ -51,6 +53,10 @@ app.post("/api/findpacks", findPacks)
 app.post("/api/pickacard", pickACard)
 
 app.post("/api/draftlobbystart", testDraftStarted)
+
+app.post("/api/uptodate", UpToDate)
+
+app.post("/api/findlobbyWithLobbyId", findLobbyWithLobbyId)
 
 app.get("/api/users", getUsers)
 

@@ -3,21 +3,24 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { LobbyContext } from "./LobbyContext";
 import { UserContext } from "./UserContext";
-import { UpdatedContext } from "./UpdatedContext";
+import LobbyBackground from "./Assets/LobbyBackground.jpg";
+import useLobby from "./useLobby";
+
 
 const NewLobby = () => {
 
-  const [booster1, setBooster1] = useState("")
-  const [booster2, setBooster2] = useState("")
-  const [booster3, setBooster3] = useState("")
+  const [booster1, setBooster1] = useState("Invasion")
+  const [booster2, setBooster2] = useState("Invasion")
+  const [booster3, setBooster3] = useState("Invasion")
   const [userName, setUserName] = useState("")
   const [pack, setPack] = useState()
   const navigate = useNavigate()
 
-  const {setCurrentLobby} = useContext(LobbyContext);
+  const {setCurrentLobby_id, lobby, setLobby, updateLastUpdated} = useContext(LobbyContext);
   const {currentUser, setCurrentUser} = useContext(UserContext);
-  const {currentUpdated, setCurrentUpdated} = useContext(UpdatedContext);
 
+
+  console.log(lobby)
   // promise.all
 
   const addPack = (event) => {
@@ -34,94 +37,62 @@ const NewLobby = () => {
         .then((parsed) => {
           console.log(parsed)
           if(parsed.status===201){
-            localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
-            localStorage.setItem("lobby", JSON.stringify(parsed.newLobby.insertedId));
-            setCurrentLobby(parsed.newLobby.insertedId);
-            setCurrentUpdated(parsed.lastUpdated)
+            console.log(parsed.foundNewLobby)
+            localStorage.setItem("lobby_id", JSON.stringify(parsed.foundNewLobby._id));
+            setLobby(parsed.foundNewLobby)
+            setCurrentLobby_id(parsed.foundNewLobby._id);
             navigate("/waitingroom");
           }
         });
   };
 
-  const [allData, setAllData] = useState([])
-
-  useEffect(() => {
-      fetch("https://api.scryfall.com/sets")
-            .then((response) => response.json())
-            .then((parsed)=>{
-                  setAllData(parsed.data)
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-    }, []);
-
-  const setTypes = allData.map((dataPoint)=>{
-      return dataPoint.set_type
-  })
-
-
-    const onlyUnique = (value, index, array) => {
-      return array.indexOf(value) === index;
-    }
-    
-    var unique = setTypes.filter(onlyUnique);
-    
-
-
-
-
-    const setsToDraft = allData.filter((data)=>{
-      return (data.set_type === "masters" || data.set_type === "expansion" || data.set_type === "core" || data.set_type === "draft_innovation") && (data.released_at < Date.now)
-  })
-
-
-
-  const setsToDraftName = setsToDraft.map((set)=>{
-      return set.name
-  })
-
-
-  const setsToDraftIcons = setsToDraft.map((set)=>{
-      return set.icon_svg_uri 
-  })
 
 
 
   return (
     <>
         <Container>
+          <Title>Create a Lobby!</Title>
           <Form onSubmit={addPack}>
-            <label>Pack1: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setBooster1(e.target.value)}></input>
-            <label>Pack2: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setBooster2(e.target.value)}></input>
-            <label>Pack3: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setBooster3(e.target.value)}></input>
+            <label>Pack1: </label><input type="text" value={booster1} id="id" autoComplete="off" onChange={(e) => setBooster1(e.target.value)}></input>
+            <label>Pack2: </label><input type="text" value={booster2} id="id" autoComplete="off" onChange={(e) => setBooster2(e.target.value)}></input>
+            <label>Pack3: </label><input type="text" value={booster3} id="id" autoComplete="off" onChange={(e) => setBooster3(e.target.value)}></input>
             <Button >Press Me</Button>
           </Form>
-          <SetsList>
-              {
-            setsToDraft.map( (set) => 
-            <Sets key={set.id} className="dropdown">{set.name} <Image key={set.id} src={set.icon_svg_uri}/> </Sets> 
-            )
-            }
-            </SetsList>
-          {pack && <Pack>
-            {pack.map((cards)=>{
-              return <PackImage key={cards.id} src={cards.image_uris.png}/>
-            })}
-          </Pack>}
         </Container>
     </>
   );
 };
 
+
+const Container = styled.div`
+  background-image: url(${LobbyBackground});
+    /* Photo by Annie Spratt on Unsplash */
+  background-size: cover;
+  color: rgb(227, 204, 174);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100vh;
+`;
+
+const Title = styled.h1`
+margin-top: 13rem;
+text-align: center;
+font-size: 3rem;
+`
+
+
 const Button = styled.button`
 `;
 
 const Form = styled.form`
+display: flex;
+
+
 `
 
 const Pack = styled.div`
-margin-top: 5rem;
 `
 
 const PackImage = styled.img`
@@ -129,14 +100,6 @@ padding:1rem;
 max-height: 20rem;
 `
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin:0;
-  overflow: hidden;
-  height: 100vh;
-`;
 
 const Sets = styled.li`
 background-color: white;

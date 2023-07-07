@@ -1,82 +1,28 @@
 import { styled } from "styled-components";
-import HomePageBackground from "./Assets/BackgroundCropped.jpg";
+import HomePageBackground from "./Assets/Background3.jpg";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import DraftGrid from "./DraftGrid";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+
 
 
 
 
 const Home = () => {
 
-    const [allData, setAllData] = useState([])
 
-    useEffect(() => {
-        fetch("https://api.scryfall.com/sets")
-              .then((response) => response.json())
-              .then((parsed)=>{
-                    setAllData(parsed.data)
-          })
-          .catch((error) => {
-              console.log(error);
-          })
-      }, []);
-
-    const setTypes = allData.map((dataPoint)=>{
-        return dataPoint.set_type
-    })
-
-
-
-      const onlyUnique = (value, index, array) => {
-        return array.indexOf(value) === index;
-      }
-      
-      var unique = setTypes.filter(onlyUnique);
-      
-
-
-
-
-      const setsToDraft = allData.filter((data)=>{
-        return (data.set_type === "masters" || data.set_type === "expansion" || data.set_type === "core" || data.set_type === "draft_innovation") && (data.released_at < Date.now)
-    })
-
-
-    const setsToDraftName = setsToDraft.map((set)=>{
-        return set.name
-    })
-
-
-    const setsToDraftIcons = setsToDraft.map((set)=>{
-        return set.icon_svg_uri 
-    })
-
-
+    const {currentUser} = useContext(UserContext)
 
     return (
         <>
         <Container>
-            <CreateALobbyButton to="/NewLobby">Create a New Lobby!</CreateALobbyButton>
-            <JoinALobbyButton to="/JoinLobby">Join a Lobby!</JoinALobbyButton>
-            
-            <DraftTab>
-            <ListDiv>
-              <ListTitle>Sets</ListTitle>
-              <SetsList>
-              {
-            setsToDraft.map( (set) => 
-            <Sets key={set.id} className="dropdown">{set.name} <Image key={set.id} src={set.icon_svg_uri}/> </Sets> 
-            )
-            }
-              </SetsList>
-            </ListDiv>
-            <Time><Input></Input>seconds</Time>
-            </DraftTab>
-            
+
+            <Welcome>Welcome to Draft Site</Welcome>
+            {!currentUser && <SignInTitle>Please Sign In to start Drafting!</SignInTitle>}
+            {currentUser && <CreateALobbyButton to="/NewLobby">Create a New Lobby!</CreateALobbyButton>}
+            {currentUser && <JoinALobbyButton to="/JoinLobby">Join a Lobby!</JoinALobbyButton>}
 
         </Container>
-        <DraftGrid/>
         </>
     )
 
@@ -89,85 +35,42 @@ const Container = styled.section`
     margin:0;
     overflow: hidden;
     background-image: url(${HomePageBackground});
-    /* Photo by Lucas Kapla on Unsplash */
+    /* Photo by Adrien Olichon on Unsplash */
     background-size: cover;
     width: 100%;
     height: 100vh;
     z-index: -10000;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 `
 
+const Welcome = styled.h1`
+color:rgb(227, 204, 174);
+font-size: 4rem;
+`
+
+const SignInTitle = styled.h2`
+color:rgb(227, 204, 174);
+font-size: 3rem;
+`
+
 const CreateALobbyButton = styled(Link)`
 text-decoration: none;
-color:white;
+color:rgb(227, 204, 174);
 font-size: 2.5rem;
 font-weight: 700;
-border:0.2rem solid white;
+border:0.2rem solid rgb(227, 204, 174);
 padding: 1rem;
 `
 
 const JoinALobbyButton = styled(Link)`
 text-decoration: none;
-color:white;
+color:rgb(227, 204, 174);
 font-size: 2.5rem;
 font-weight: 700;
-border:0.2rem solid white;
+border:0.2rem solid rgb(227, 204, 174);
 padding: 1rem;
 `
 
-const DraftTab = styled.div`
-`
-
-const Image = styled.img`
-height:1rem;
-`
-
-const Time = styled.div`
-`
-
-const Input = styled.input`
-font-family: 'Monomaniac One', sans-serif;
-width: 3.5rem;
-`
-
-const Sets = styled.li`
-background-color: white;
-list-style: none;
-padding: 0 1rem;
-margin: 0;
-visibility:hidden;
-&:hover {
-        color: red;
-        cursor: pointer;
-    }
-
-`
-
-const SetsList = styled.ul`
-    max-height: 20rem;
-    overflow-y : scroll;
-    margin:0;
-    padding:0;
-    &::-webkit-scrollbar{
-        display:none
-    }
-`
-
-const ListDiv = styled.div`
-    &:hover ${Sets}{
-    visibility: visible;
-}
-
-`
-
-
-const ListTitle = styled.p`
-&:hover {
-        color: red;
-        cursor: pointer;
-    }
-
-
-`

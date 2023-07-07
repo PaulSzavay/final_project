@@ -34,7 +34,7 @@ const testDraftStarted = async (request, response) => {
         const changeDateNow = {$set:{lastUpdated}}
         const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
 
-        return response.status(200).json({status:200, message:"Draft has started", lastUpdate})
+        return response.status(200).json({status:200, message:"Draft has started", lastUpdated})
     }
 
       } catch (error) {

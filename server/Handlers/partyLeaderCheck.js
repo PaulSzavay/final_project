@@ -34,8 +34,6 @@ const partyLeaderCheck = async (request, response) => {
     const changeDateNow = {$set:{lastUpdated}}
     const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
 
-    
-
     if(isUserPartyLeader.partyLeader){
         return response.status(200).json({status:200, partyLeader:isUserPartyLeader.userName, lastUpdated})
     }

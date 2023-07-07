@@ -3,27 +3,28 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { LobbyContext } from "./LobbyContext";
 import { UserContext } from "./UserContext";
-import { UpdatedContext } from "./UpdatedContext";
+import LobbyBackground from "./Assets/LobbyBackground.jpg";
+
 
 const JoinLobby = ({socket}) => {
 
   const [userName, setUserName] = useState("")
   const navigate = useNavigate()
 
-  const {currentLobby, setCurrentLobby} = useContext(LobbyContext);
+  const {currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated} = useContext(LobbyContext);
   const {setCurrentUser, currentUser} = useContext(UserContext)
-  const {currentUpdated, setCurrentUpdated} = useContext(UpdatedContext)
+
 
   const joinLobby = (event) => {
     event.preventDefault();
-    if (currentLobby !== ""){
-        socket.emit("join_room", currentLobby)
+    if (currentLobby_id !== ""){
+        socket.emit("join_room", currentLobby_id)
     }
 
     fetch('/api/joinlobby', {
     method: 'PATCH',
     body: JSON.stringify({
-        _id:currentLobby,
+        _id:currentLobby_id,
         userName: currentUser
     }),
     headers: {
@@ -33,23 +34,24 @@ const JoinLobby = ({socket}) => {
     })
     .then((response) => response.json())
     .then((parsed) => {
-        console.log(parsed)
         if(parsed.status===200){
-            localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
-            localStorage.setItem("lobby", JSON.stringify(parsed.lobbyId));
-            setCurrentLobby(parsed.lobbyId);
-            setCurrentUpdated(parsed.lastUpdated)
+            localStorage.setItem("lobby_id", JSON.stringify(parsed.foundNewLobby._id));
+            setCurrentLobby_id(parsed.foundNewLobby._id);
+            setLobby(parsed.foundNewLobby)
             navigate("/waitingroom")
         }
     });
 }
-console.log(currentUser)
+
 
   return (
     <>
         <Container>
+          <Title>Join a Lobby!</Title>
           <Form onSubmit={joinLobby}>
-            <label>LobbyID: </label><input type="text" id="id" autoComplete="off" onChange={(e) => setCurrentLobby(e.target.value)}></input>
+            <LabelDiv>
+              <FormLabel>LobbyID: </FormLabel><FormInput type="text" id="id" autoComplete="off" onChange={(e) => setCurrentLobby_id(e.target.value)}></FormInput>
+            </LabelDiv>
             <Button>Submit</Button>
           </Form>
         </Container>
@@ -57,55 +59,96 @@ console.log(currentUser)
   );
 };
 
-const Button = styled.button`
-`;
 
-const Form = styled.form`
-`
-
-const Pack = styled.div`
-margin-top: 5rem;
-`
-
-const PackImage = styled.img`
-padding:1rem;
-max-height: 20rem;
-`
 
 const Container = styled.div`
+  background-image: url(${LobbyBackground});
+  /* Photo by Annie Spratt on Unsplash */
+  background-size: cover;
+  color: rgb(227, 204, 174);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin:0;
+  align-items: center;
   overflow: hidden;
   height: 100vh;
 `;
 
-const Sets = styled.li`
-background-color: white;
-list-style: none;
-padding: 0 1rem;
-margin: 0;
-visibility:hidden;
+const Title = styled.h1`
+margin-top: 13rem;
+text-align: center;
+font-size: 3rem;
+`
+
+const Button = styled.button`
+  align-items: center;
+  background-color: black;
+  border: 1px solid darkgrey;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgb(227, 204, 174);
+  cursor: pointer;
+  font-family: 'Monomaniac One', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 5rem;
+  padding: 0.75rem;
+  text-decoration: none;
+  transition: all 250ms;
+  width: 10rem;
+
+&:hover,
+&:focus {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  opacity: 0.75;
+}
+
 &:hover {
-        color: red;
-        cursor: pointer;
-    }
+  transform: translateY(-1px);
+  
+}
 
+&:active {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  transform: translateY(0);
+}
+`;
+
+
+const Form = styled.form`
+display: flex;
+flex-direction: column;
+align-items: center;
 `
 
-const SetsList = styled.ul`
-    max-height: 20rem;
-    overflow-y : scroll;
-    margin:0;
-    padding:0;
-    &::-webkit-scrollbar{
-        display:none
-    }
+const FormLabel = styled.label`
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0;
+  margin-left: 1rem;
 `
 
-const Image = styled.img`
-height:1rem;
+const LabelDiv = styled.div`
+margin-top: 4rem;
 `
+
+const FormInput = styled.input`
+  font-family: 'Monomaniac One', sans-serif;
+  font-size: 2rem;
+  margin: 1rem;
+  width: 30rem;
+  background-color: rgb(227, 204, 174);
+  &:focus {
+    outline: 2px solid white;
+  }
+`
+
+
+
+
+
 
 export default JoinLobby;

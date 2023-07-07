@@ -4,6 +4,7 @@ import { UserContext } from "./UserContext";
 import { LobbyContext } from "./LobbyContext";
 
 
+
 const DraftPage = ({socket}) => {
 
     const [starterPacks, setStarterPacks] = useState(null)
@@ -13,18 +14,18 @@ const DraftPage = ({socket}) => {
     const [selectedCard, setSelectedCard] = useState("")
 
     const {currentUser} = useContext(UserContext)
-    const {currentLobby} = useContext(LobbyContext)
+    const {currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated} = useContext(LobbyContext)
 
     useEffect(()=>{
-        if (currentLobby !== ""){
-            socket.emit("join_room", currentLobby)
+        if (currentLobby_id !== ""){
+            socket.emit("join_room", currentLobby_id)
         }
     }, [socket]);
 
     useEffect(()=>{
         fetch("/api/findlobby", {
             method: 'POST',
-            body: JSON.stringify({_id:currentLobby, userName:currentUser}),
+            body: JSON.stringify({_id:currentLobby_id, userName:currentUser}),
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -46,7 +47,7 @@ const DraftPage = ({socket}) => {
             method: 'POST',
             body: JSON.stringify({
                 packIds:starterPacks,
-                lobby_id:currentLobby
+                lobby_id:currentLobby_id
             }),
             headers: {
                 Accept: "application/json",
@@ -62,7 +63,6 @@ const DraftPage = ({socket}) => {
             })}
     },[starterPacks])
 
-    console.log(pack.packData)
 
 
     const selectCard = ( _id) => {
@@ -73,7 +73,7 @@ const DraftPage = ({socket}) => {
                 pack_id: pack._id,
                 card_id:_id,
                 player_userName:currentUser,
-                lobby_id:currentLobby
+                lobby_id:currentLobby_id
             }),
             headers: {
                 Accept: "application/json",
@@ -82,10 +82,11 @@ const DraftPage = ({socket}) => {
             })
             .then((response) => response.json())
             .then((parsed) => {
-                console.log(parsed);
+                if(parsed.status===200){
+                    setPack(parsed.pack1);                    
+                }
+
                 });
-
-
     }
 
 
@@ -108,9 +109,10 @@ const DraftPage = ({socket}) => {
                         onDoubleClick={()=>{selectCard(packContent._id)}}
                         id={packContent._id}
                         >
-                        {packContent.card.card_faces ? <Image key={packContent.card.multiverse_ids} src={packContent.card.card_faces[0].image_uris.png}/>
-                        :
-                        <Image key={packContent.card.multiverse_ids} src={packContent.card.image_uris.png}/>}
+                        {/* {packContent.card.card_faces ? <Image key={packContent.card.multiverse_ids} src={packContent.card.card_faces[0].image_uris.png}/> */}
+                        {/* : */}
+                        <Image key={packContent.card.multiverse_ids} src={packContent.card.image_uris.png}/>
+                        {/* } */}
                         </ImageButton>
                         <Name key={packContent.card.name}>{packContent.card.name}</Name>
                     </ImageDiv>}

@@ -42,13 +42,15 @@ justify-content: space-between;
 align-items: center;
 padding: 0 2rem;
 box-sizing: border-box;
-background-color: red;
+background-color: rgb(38, 42, 86);
 position: fixed;
+top: 0;
 width: 100%;
-min-height: 5rem;
+min-height: 6rem;
 `
 
 const Left = styled.div`
+width: 33%;
 `
 
 const Logo = styled.img`
@@ -59,27 +61,38 @@ height: 4rem;
 
 
 const Middle = styled.div`
+width: 33%;
+text-align: center;
 `
 
 const Right = styled.div`
+width: 33%;
+display: flex;
+flex-direction: column;
+padding: 0.5rem 0;
 `
 
 const MainSiteLink = styled(Link)`
 font-size: 3rem;
-color: black;
+color: rgb(184, 98, 27);
 text-decoration: none;
 `
 
 const SignInLink = styled(Link)`
 display: flex;
+justify-content: right;
 font-size: 2.5rem;
-color: black;
+color: rgb(184, 98, 27);
 text-decoration: none;
+margin: 0;
+max-height: 3rem;
 `
 
 const SignOutLink = styled(Link)`
 display: flex;
+justify-content: right;
 font-size: 2.5rem;
-color: black;
+color: rgb(184, 98, 27);
 text-decoration: none;
+margin-bottom: 1rem;
 `

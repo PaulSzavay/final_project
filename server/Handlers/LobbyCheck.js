@@ -11,13 +11,13 @@ const options = {
 
 const lobbyCheck = async (request, response) => {
     const { _id } = request.body
-    console.log(request.body)
 
   const client = new MongoClient(MONGO_URI, options);
 
   try{
     await client.connect();
     const db = client.db("MTGDraft");
+
 
     const foundLobby = await db.collection("Lobby").findOne({ _id });
 
