@@ -21,11 +21,16 @@ const lobbyCheck = async (request, response) => {
 
     const foundLobby = await db.collection("Lobby").findOne({ _id });
 
+    const lastUpdated = Date.now()
+    const queryDateNow = {_id:_id}
+    const changeDateNow = {$set:{lastUpdated}}
+    const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
+
     if(foundLobby){
-        return response.status(200).json({status:200, playersFound:foundLobby.players.length})
+        return response.status(200).json({status:200, playersFound:foundLobby.players.length, lastUpdated})
     }
       } catch (error) {
-        console.error(error);
+        return response.status(500).json({status:500, message:error.message})
       } finally {
         client.close();
       }

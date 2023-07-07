@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { LobbyContext } from "./LobbyContext";
 import { UserContext } from "./UserContext";
+import { UpdatedContext } from "./UpdatedContext";
 
 const NewLobby = () => {
 
@@ -14,7 +15,8 @@ const NewLobby = () => {
   const navigate = useNavigate()
 
   const {setCurrentLobby} = useContext(LobbyContext);
-  const {currentUser, setCurrentUser} = useContext(UserContext)
+  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const {currentUpdated, setCurrentUpdated} = useContext(UpdatedContext);
 
   // promise.all
 
@@ -32,8 +34,10 @@ const NewLobby = () => {
         .then((parsed) => {
           console.log(parsed)
           if(parsed.status===201){
+            localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
             localStorage.setItem("lobby", JSON.stringify(parsed.newLobby.insertedId));
             setCurrentLobby(parsed.newLobby.insertedId);
+            setCurrentUpdated(parsed.lastUpdated)
             navigate("/waitingroom");
           }
         });

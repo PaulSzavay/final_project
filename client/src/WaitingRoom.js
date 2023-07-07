@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { LobbyContext } from "./LobbyContext";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
+import { UpdatedContext } from "./UpdatedContext";
 
 const WaitingRoom = ({socket}) => {
 
@@ -15,8 +16,9 @@ const WaitingRoom = ({socket}) => {
     const [askIfFull, setAskIfFull] = useState("")
 
     const {currentLobby, setCurrentLobby} = useContext(LobbyContext);
-    const {currentUser, setCurrentUser, loggedInUser} = useContext(UserContext)
-    const navigate = useNavigate()
+    const {currentUser, setCurrentUser, loggedInUser} = useContext(UserContext);
+    const {currentUpdated, setCurrentUpdated} = useContext(UpdatedContext);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         setLoading(false)
@@ -31,8 +33,6 @@ const WaitingRoom = ({socket}) => {
             setMessageReceived(data.message);
         });
     }, [socket]);
-
-    
 
     useEffect(()=>{
         if (currentLobby !== ""){
@@ -52,8 +52,10 @@ const WaitingRoom = ({socket}) => {
         .then((response) => response.json())
         .then((parsed) => {
               if(parsed.status===200){
-                setPartyLeader(parsed.partyLeader)
-                setLoading(false)
+                localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
+                setPartyLeader(parsed.partyLeader);
+                setCurrentUpdated(parsed.lastUpdated);
+                setLoading(false);
               }
         })
         .catch((error) => {
@@ -61,11 +63,8 @@ const WaitingRoom = ({socket}) => {
         })
   }, []);
 
-
-
-
-
     const readyFunction = (event) => {
+      console.log("ready pressed")
         event.preventDefault();
         fetch("/api/lobby", {
             method: "POST",
@@ -78,8 +77,9 @@ const WaitingRoom = ({socket}) => {
             .then((response) => response.json())
             .then((parsed) => {
                 if(parsed.status === 200 ){
-                  console.log(parsed)
-                  setReady(!ready)
+                  setReady(!ready);
+                  localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
+                  setCurrentUpdated(parsed.lastUpdated);
                 }
             })
             .catch((error) => {
@@ -87,8 +87,8 @@ const WaitingRoom = ({socket}) => {
             })
     }
 
-
     const startFunction = (event) => {
+      console.log("start pressed")
       event.preventDefault();
       fetch("/api/lobbycheck", {
         method: "POST",
@@ -101,9 +101,13 @@ const WaitingRoom = ({socket}) => {
         .then((response) => response.json())
         .then((parsed) => {
           if(parsed.playersFound < 7){
-            setAskIfFull(parsed.playersFound)
+            setAskIfFull(parsed.playersFound);
+            localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
+            setCurrentUpdated(parsed.lastUpdated);
           }
           else{
+            localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
+            setCurrentUpdated(parsed.lastUpdated);
             navigate("/draftPage")
           }
         })
@@ -111,7 +115,6 @@ const WaitingRoom = ({socket}) => {
           console.error(error);
         });
     }
-
 
     const yesFunction = (event) => {
       event.preventDefault();
@@ -125,8 +128,9 @@ const WaitingRoom = ({socket}) => {
       })
         .then((response) => response.json())
         .then((parsed) => {
-          console.log(parsed)
-          navigate("/draftPage")
+          navigate("/draftPage");
+          localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
+          setCurrentUpdated(parsed.lastUpdated);
         })
         .catch((error) => {
           console.error(error);
@@ -138,6 +142,29 @@ const WaitingRoom = ({socket}) => {
       setAskIfFull("");
     }
 
+    const checkIfDraftHasStarted = () => {
+      fetch("/api/draftlobbystart", {
+        method: "POST",
+        body: JSON.stringify({ _id:currentLobby, lastUpdated:currentUpdated}),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((parsed) => {
+          if(parsed.status === 200){
+            navigate("/draftPage");
+            localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
+            setCurrentUpdated(parsed.lastUpdated);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    setInterval(checkIfDraftHasStarted, 2000);
 
     return (
         <>
@@ -162,7 +189,7 @@ const WaitingRoom = ({socket}) => {
             <button onClick={sendMessage}>Send Message</button>
             <p>Message: {messageReceived}</p>
             <button onClick={readyFunction}>{!ready?"Ready":"Unready"}</button>
-            {partyLeader === true && <button onClick={startFunction}>Start</button>}
+            {partyLeader === currentUser && <button onClick={startFunction}>Start</button>}
 
         </div>
         </Container>

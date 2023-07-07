@@ -25,6 +25,8 @@ const { partyLeaderCheck } = require('./Handlers/partyLeaderCheck');
 const { fillLobby } = require('./Handlers/fillLobby');
 const { findLobby } = require('./Handlers/findLobby');
 const { findPacks } = require('./Handlers/findPacks');
+const { pickACard } = require('./Handlers/pickACard');
+const { testDraftStarted } = require('./Handlers/testToStartDraft');
 
 
 
@@ -46,6 +48,10 @@ app.post("/api/findlobby", findLobby)
 
 app.post("/api/findpacks", findPacks)
 
+app.post("/api/pickacard", pickACard)
+
+app.post("/api/draftlobbystart", testDraftStarted)
+
 app.get("/api/users", getUsers)
 
 app.get("/api/user/:email", getUser)
@@ -56,7 +62,7 @@ app.post("/api/createuser", createUser)
 
 app.post("/api/createlobby", createLobby)
 
-app.post("/api/oneboosterack", getABooster)
+app.post("/api/oneboosterpack", getABooster)
 
 app.patch("/api/joinlobby", joinALobby)
 // 

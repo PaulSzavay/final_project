@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const {rares, uncommons, commons, basic} = require("../Helpers/cardFilterFunction")
 
 
-const makeABooster = (setOfCards) => {
+const makeABooster = (setOfCards, num) => {
     if({...nonRepeating(basic(setOfCards), 1)===null}){
         return {"_id":uuidv4(),
             "packData":[
@@ -11,7 +11,7 @@ const makeABooster = (setOfCards) => {
                 ...nonRepeating(uncommons(setOfCards), 3),
                 ...nonRepeating(commons(setOfCards), 10)
             ], 
-            "status":"next"}
+            "status":num}
     }
     return {"_id":uuidv4(),
             "packData":[
@@ -20,6 +20,6 @@ const makeABooster = (setOfCards) => {
                 ...nonRepeating(commons(setOfCards), 10),
                 ...nonRepeating(basic(setOfCards), 1)
             ], 
-            "status":"next"}}
+            "status":num}}
 
 module.exports = {makeABooster}

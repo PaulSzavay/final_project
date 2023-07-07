@@ -25,8 +25,13 @@ const findLobby = async (request, response) => {
         return user.userName === userName
     })
 
+    const lastUpdated = Date.now()
+    const queryDateNow = {_id}
+    const changeDateNow = {$set:{lastUpdated}}
+    const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
+
     if(foundUser){
-        return response.status(200).json({status:200, userPacks:foundUser.packs});
+        return response.status(200).json({status:200, userPacks:foundUser.packs, lastUpdated});
     }
 
       } catch (error) {

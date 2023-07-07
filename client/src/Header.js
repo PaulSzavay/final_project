@@ -17,7 +17,7 @@ const Header = () => {
 
     return (
     <>
-    {/* <HeaderBox>
+    <HeaderBox>
     <Left>
         <Logo src={cards}/>
     </Left>
@@ -28,7 +28,7 @@ const Header = () => {
         <SignInLink to="/signin">{currentUser ? `Hello ${loggedInUser}` : "Sign In"}</SignInLink>
         <SignOutLink to="/" onClick={signOut}>{currentUser && "Sign Out"}</SignOutLink>
     </Right>
-    </HeaderBox> */}
+    </HeaderBox>
     </>
 )
 }

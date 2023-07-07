@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { LobbyContext } from "./LobbyContext";
 import { UserContext } from "./UserContext";
+import { UpdatedContext } from "./UpdatedContext";
 
 const JoinLobby = ({socket}) => {
 
@@ -11,6 +12,7 @@ const JoinLobby = ({socket}) => {
 
   const {currentLobby, setCurrentLobby} = useContext(LobbyContext);
   const {setCurrentUser, currentUser} = useContext(UserContext)
+  const {currentUpdated, setCurrentUpdated} = useContext(UpdatedContext)
 
   const joinLobby = (event) => {
     event.preventDefault();
@@ -22,7 +24,7 @@ const JoinLobby = ({socket}) => {
     method: 'PATCH',
     body: JSON.stringify({
         _id:currentLobby,
-        userName
+        userName: currentUser
     }),
     headers: {
         Accept: "application/json",
@@ -33,8 +35,10 @@ const JoinLobby = ({socket}) => {
     .then((parsed) => {
         console.log(parsed)
         if(parsed.status===200){
+            localStorage.setItem("updated", JSON.stringify(parsed.lastUpdated));
             localStorage.setItem("lobby", JSON.stringify(parsed.lobbyId));
             setCurrentLobby(parsed.lobbyId);
+            setCurrentUpdated(parsed.lastUpdated)
             navigate("/waitingroom")
         }
     });

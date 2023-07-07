@@ -30,39 +30,36 @@ const createLobby = async (request, response) => {
 
     // for loop over packs to generate 24 boosters
     for(let i = 0; i < 8; i++){
-      let packs = makeABooster(packAdded1)
+      let packs = makeABooster(packAdded1, 0)
       const generatePacks1ForDraft = await db.collection("Packs").insertMany([packs]);
       let Ids = [packs._id]
       packIds.push(Ids)
     }
 
     for(let i = 0; i < 8; i++){
-      let packs = makeABooster(packAdded2)
+      let packs = makeABooster(packAdded2, 1)
       const generatePacks2ForDraft = await db.collection("Packs").insertMany([packs]);
       let Ids = [packs._id]
       packIds.push(Ids)
     }
 
     for(let i = 0; i < 8; i++){
-      let packs = makeABooster(packAdded3)
+      let packs = makeABooster(packAdded3, 2)
       const generatePacks3ForDraft = await db.collection("Packs").insertMany([packs]);
       let Ids = [packs._id]
       packIds.push(Ids)
     }
 
+    const lastUpdated = Date.now()
 
-    const newLobby = await db.collection("Lobby").insertOne({ _id:uuidv4(), packIds, players:[{userName, partyLeader:true, isReady:false}]});
+
+    const newLobby = await db.collection("Lobby").insertOne({ _id:uuidv4(), packIds, players:[{userName, partyLeader:true, isReady:false, pool:[], lastPicked:""}], lastUpdated});
     console.log(newLobby)
 
 
-    response.status(200).json({
-      status: 201,
-      message: "Success, lobby has been created",
-      newLobby,
-      userName
-    });
+    response.status(200).json({status: 201, message: "Success, lobby has been created", newLobby, userName, lastUpdated});
   } catch (error) {
-    console.error(error);
+    return response.status(500).json({status:500, message:error.message})
   } finally {
     client.close();
   }

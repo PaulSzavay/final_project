@@ -10,8 +10,7 @@ const options = {
 };
 
 const findPacks = async (request, response) => {
-    const { packIds } = request.body
-
+    const { packIds, lobby_id } = request.body
 
   const client = new MongoClient(MONGO_URI, options);
 
@@ -19,22 +18,18 @@ const findPacks = async (request, response) => {
     await client.connect();
     const db = client.db("MTGDraft");
 
-    console.log(packIds[3])
-    
-    // for(let i = 0; i < 3; i++){
-    //     const findPacks = await db.collection("Packs").findOne({_id:packIds[i]});
-    //     console.log(findPacks)
-    //     response.status(200).json({status:200, data:findPacks})
-    //   }
+    let packInfo = {}
+    for(let i = 0; i <= 2; i++){
+        const findPacks = await db.collection("Packs").findOne({_id:packIds[i]});
+        packInfo = {...packInfo, [`pack${i+1}`]:findPacks}
+      }
 
-    const findPack1 = await db.collection("Packs").findOne({_id:packIds[0]});
-    const findPack2 = await db.collection("Packs").findOne({_id:packIds[1]});
-    const findPack3 = await db.collection("Packs").findOne({_id:packIds[2]});
+      const lastUpdated = Date.now()
+      const queryDateNow = {_id:lobby_id}
+      const changeDateNow = {$set:{lastUpdated}}
+      const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
 
-    if(findPack1 && findPack2 && findPack3){
-        return response.status(200).json({status:200, data:{pack1:findPack1, pack2:findPack2, pack3:findPack3}})
-    }
-
+      return response.status(200).json({status:200, data:packInfo, lastUpdated})
 
       } catch (error) {
         return response.status(500).json({status:500, message:error.message})

@@ -26,7 +26,7 @@ const getUser = async (request, response) => {
     }
 
     } catch (error) {
-        console.error(error);
+        return response.status(500).json({status:500, message:error.message})
     } finally {
         client.close();
     }

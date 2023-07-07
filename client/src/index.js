@@ -4,13 +4,16 @@ import './index.css';
 import App from './App';
 import { UserProvider } from './UserContext';
 import { LobbyProvider } from './LobbyContext';
+import { UpdatedProvider } from './UpdatedContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <UserProvider>
         <LobbyProvider>
-            <App />
+            <UpdatedProvider>
+                <App />
+            </UpdatedProvider>
         </LobbyProvider>
     </UserProvider>
 );

@@ -9,11 +9,11 @@ const options = {
   useUnifiedTopology: true,
 };
 
-const partyLeaderCheck = async (request, response) => {
+const testDraftStarted = async (request, response) => {
 
-    const {userName, _id} = request.body
+    const {_id, lastUpdated} = request.body
 
-    if(!userName || !_id){
+    if(!_id || !lastUpdated){
         return response.status(404).json({status:404, message:"Not enough information provided."})
     }
 
@@ -25,19 +25,16 @@ const partyLeaderCheck = async (request, response) => {
 
     const foundLobby = await db.collection("Lobby").findOne({_id});
 
-    const isUserPartyLeader = foundLobby.players.find((user)=>{
-        return user.userName
-    })
+    const lastUpdatedMongo = foundLobby.lastUpdated
 
-    const lastUpdated = Date.now()
-    const queryDateNow = {_id:_id}
-    const changeDateNow = {$set:{lastUpdated}}
-    const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
+    if(foundLobby.players === 8 && lastUpdatedMongo>lastUpdated){
 
-    
+        const lastUpdated = Date.now()
+        const queryDateNow = {_id:_id}
+        const changeDateNow = {$set:{lastUpdated}}
+        const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
 
-    if(isUserPartyLeader.partyLeader){
-        return response.status(200).json({status:200, partyLeader:isUserPartyLeader.userName, lastUpdated})
+        return response.status(200).json({status:200, message:"Draft has started", lastUpdate})
     }
 
       } catch (error) {
@@ -47,4 +44,4 @@ const partyLeaderCheck = async (request, response) => {
       }
 }
 
-module.exports = { partyLeaderCheck }
+module.exports = { testDraftStarted }

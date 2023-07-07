@@ -7,11 +7,10 @@ import { LobbyContext } from "./LobbyContext";
 const DraftPage = ({socket}) => {
 
     const [starterPacks, setStarterPacks] = useState(null)
-    const [pack1, setPack1] = useState("")
-    const [pack2, setPack2] = useState("")
-    const [pack3, setPack3] = useState("")
+    const [pack, setPack] = useState("")
     const [loading, setLoading] = useState(true)
-    const [active, setActive]= useState(false)
+
+    const [selectedCard, setSelectedCard] = useState("")
 
     const {currentUser} = useContext(UserContext)
     const {currentLobby} = useContext(LobbyContext)
@@ -45,7 +44,10 @@ const DraftPage = ({socket}) => {
         {starterPacks !== null &&
         fetch("/api/findpacks", {
             method: 'POST',
-            body: JSON.stringify({packIds:starterPacks}),
+            body: JSON.stringify({
+                packIds:starterPacks,
+                lobby_id:currentLobby
+            }),
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -53,32 +55,40 @@ const DraftPage = ({socket}) => {
             })
             .then((response) => response.json())
             .then((parsed) => {
+                console.log(parsed)
                 if(parsed.status===200)
-                    setPack1(parsed.data.pack1)
-                    setPack2(parsed.data.pack2)
-                    setPack3(parsed.data.pack3)
+                    setPack(parsed.data.pack1)
                     setLoading(false)
             })}
     },[starterPacks])
 
+    console.log(pack.packData)
 
-    // const mouseDownHandler = ( event ) => {
-    //     event.preventDefault();
-    //     if( event.button === 1 ) {
-    //       setActive(true)
-    //     }
-    //   }
 
-    //   const mouseUpHandler = ( event ) => {
-    //     event.preventDefault();
-    //     if( event.button === 1 ) {
-    //       setActive(false)
-    //     }
-    //   }
+    const selectCard = ( _id) => {
 
-    const selectCard = () => {
+        fetch('/api/pickacard', {
+            method: 'POST',
+            body: JSON.stringify({
+                pack_id: pack._id,
+                card_id:_id,
+                player_userName:currentUser,
+                lobby_id:currentLobby
+            }),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                },
+            })
+            .then((response) => response.json())
+            .then((parsed) => {
+                console.log(parsed);
+                });
+
 
     }
+
+
 
 
 
@@ -87,18 +97,23 @@ const DraftPage = ({socket}) => {
         {!loading &&
         <Container>
             <DraftPack >
-            {pack1.packData.map((packContent)=>{
+            {pack && pack.packData.map((packContent)=>{
+                // console.log(packContent[0].card_faces[0].image_uris.png)
                 return (
                     <>
-                    <ImageDiv key={packContent.name}>
+                    {packContent.isPicked===false && 
+                    <ImageDiv key={packContent.card.oracle_id}>
                         <ImageButton 
-                        onDoubleClick={selectCard}
-                        // onMouseDown={mouseDownHandler} onMouseUp={mouseUpHandler}
+                        key={packContent.card.id}
+                        onDoubleClick={()=>{selectCard(packContent._id)}}
+                        id={packContent._id}
                         >
-                        <Image active={active} src={packContent.image_uris.png}/>
+                        {packContent.card.card_faces ? <Image key={packContent.card.multiverse_ids} src={packContent.card.card_faces[0].image_uris.png}/>
+                        :
+                        <Image key={packContent.card.multiverse_ids} src={packContent.card.image_uris.png}/>}
                         </ImageButton>
-                        <Name>{packContent.name}</Name>
-                    </ImageDiv>
+                        <Name key={packContent.card.name}>{packContent.card.name}</Name>
+                    </ImageDiv>}
                     </>
                 )
             })}
@@ -112,24 +127,23 @@ const DraftPage = ({socket}) => {
 export default DraftPage
 
 const Container = styled.div`
-  /* display: flex;
+  display: flex;
   flex-direction: row;
   justify-content: center; 
   align-items: center;
   margin:0;
-  overflow: hidden;
-  height: 100vh; */
+  height: 110vh;
+
 `;
 
 const Image = styled.img`
 max-width: 10rem;
 margin: 0;
 
-/* &:active{
-    max-width: 20rem;
+&:hover{
+    transform: scale(1.75) ;
     z-index: 1;
-    position: static;
-} */
+}
 `
 
 const DraftPack = styled.div`

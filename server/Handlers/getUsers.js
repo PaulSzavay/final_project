@@ -23,7 +23,7 @@ const getUsers = async (request, response) => {
         ? response.status(200).json({ status: 200, data: users })
         : response.status(404).json({ status: 404, message: "Users not found" });
       } catch (error) {
-        console.error(error);
+        return response.status(500).json({status:500, message:error.message})
       } finally {
         client.close();
       }

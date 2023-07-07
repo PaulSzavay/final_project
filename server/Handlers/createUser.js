@@ -54,7 +54,7 @@ const createUser = async (request, response) => {
     message: "User was not created, please try again",
     });
   } catch (error) {
-    console.error(error)
+    return response.status(500).json({status:500, message:error.message})
   } finally {
     client.close();
   }

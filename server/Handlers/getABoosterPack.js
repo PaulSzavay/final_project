@@ -27,13 +27,15 @@ const getABooster = async (request, response) => {
 
     const generateBoosterPack = await db.collection("Packs").insertOne(pack);
 
+    
+
     response.status(200).json({
       status: 200,
       message: "Success",
       pack
     });
   } catch (error) {
-    console.error(error);
+    return response.status(500).json({status:500, message:error.message})
   } finally {
     client.close();
   }
