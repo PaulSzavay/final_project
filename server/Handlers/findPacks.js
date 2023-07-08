@@ -19,9 +19,11 @@ const findPacks = async (request, response) => {
     const db = client.db("MTGDraft");
 
     let packInfo = {}
-    for(let i = 0; i <= 2; i++){
+    for(let i = 0; i < 3; i++){
         const findPacks = await db.collection("Packs").findOne({_id:packIds[i]});
+        if(findPacks !== null){
         packInfo = {...packInfo, [`pack${i+1}`]:findPacks}
+        }
       }
 
       const lastUpdated = Date.now()

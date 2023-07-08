@@ -46,20 +46,101 @@ const pickACard = async (request, response) => {
 
     const pushCardIntoPlayerLastPicked = await db.collection("Lobby").updateOne(query2, change2)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // let packInfo = {}
+    // for(let i = 0; i < 3; i++){
+    //   const findPacks = await db.collection("Packs").findOne({_id:findPlayer.packs[i]});
+    //   if(findPacks !== null){
+    //     packInfo = {...packInfo, [`pack${i+1}`]:findPacks}
+    //   }
+    // }
+
+
+
+
+
+
     const getPackInfoToGetChanged = await db.collection("Lobby").findOne({ _id:lobby_id })
 
     const findPlayerInfoToGetPacksToGetChanged = getPackInfoToGetChanged.players.find((player)=>{
       return player.userName = player_userName
     })
 
-    const newArrayOfPacksToSet = ["", findPlayerInfoToGetPacksToGetChanged.packs[1], findPlayerInfoToGetPacksToGetChanged.packs[2]]
+    // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
+
+    // change to ["", plus remaining packs]
+
+    const newArrayOfPacksToSet = findPlayerInfoToGetPacksToGetChanged.packs.shift()
+
+    // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
+
+    const addEmptyString = findPlayerInfoToGetPacksToGetChanged.packs.unshift("")
+
+    // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
+
 
     const query3 = { _id: lobby_id, "players.userName": foundPlayer.userName }
-    const change3 = { $set: { "players.$.packs" : newArrayOfPacksToSet } }
+    const change3 = { $set: { "players.$.packs" : findPlayerInfoToGetPacksToGetChanged.packs } }
 
     const lastPackChangedToEmptyString = await db.collection("Lobby").updateOne(query3, change3)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     const lobby2 = await db.collection("Lobby").findOne({ _id:lobby_id })
+
+
 
     const howManyPlayersExist = lobby2.players.map((players)=>{
       return players.userName
@@ -78,7 +159,7 @@ const pickACard = async (request, response) => {
       }
     })
 
-    if(numberOfPlayersThatPicked>=numberOfRealPlayers){
+    if(numberOfPlayersThatPicked === numberOfRealPlayers){
       
 
       let arrayOfBots = []
@@ -127,14 +208,31 @@ const pickACard = async (request, response) => {
           return player.userName === arrayOfBots[i]
         })
     
-        const newArrayOfBotPacksToSet = ["", botPackArray.packs[1], botPackArray.packs[2]]
+
+
+        const newArrayOfPacksToSet = botPackArray.packs.shift()
+
+        // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
+    
+        const addEmptyString = botPackArray.packs.unshift("")
+    
+        // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
+    
+
+
+        // const newArrayOfBotPacksToSet = ["", botPackArray.packs[1], botPackArray.packs[2]]
     
         const query3 = { _id: lobby_id, "players.userName": arrayOfBots[i] }
-        const change3 = { $set: { "players.$.packs" : newArrayOfBotPacksToSet } }
+        const change3 = { $set: { "players.$.packs" : botPackArray.packs } }
     
         const BotPackChangedToEmptyString = await db.collection("Lobby").updateOne(query3, change3)
+        
+
+
+
       }
     }
+
 
     // pass cards
 
@@ -145,6 +243,8 @@ const pickACard = async (request, response) => {
     const packArrayLength = players.map((player)=>{
       return player.packs.length
     })
+
+    console.log(packArrayLength)
 
     if(packArrayLength[0] === 2){
     for(let i=0; i<8; i++){
@@ -179,11 +279,12 @@ const pickACard = async (request, response) => {
       return pack.isPicked === true
     })
 
-
     if(checkIsPicked === true){
       const lobbyUpdate = await db.collection("Lobby").findOne({_id:lobby_id})
 
+
       const players = lobbyUpdate.players
+
 
       for(let i=0; i<8; i++){
           const removePackIndex0 = players[i].packs.shift()
@@ -195,6 +296,7 @@ const pickACard = async (request, response) => {
       const lobbyPassLeft = await db.collection("Lobby").updateOne(queryRemovePack1, changeRemovePack1)
     }
 
+
     const lastUpdated = Date.now()
     const queryDateNow = {_id:lobby_id}
     const changeDateNow = {$set:{lastUpdated}}
@@ -202,11 +304,23 @@ const pickACard = async (request, response) => {
 
     const finalLobbyFind = await db.collection("Lobby").findOne({_id:lobby_id});
 
-    const findPlayer = finalLobbyFind.players.filter((player)=>{
+
+    const findPlayer = finalLobbyFind.players.find((player)=>{
       return player.userName === player_userName
     }) 
 
-    return response.status(200).json({status:200, data:{pack1:findPlayer.packs[0], pack2:findPlayer.packs[1], pack3:findPlayer.packs[2]}, lastUpdated})
+    let packInfo = {}
+    for(let i = 0; i < 3; i++){
+      const findPacks = await db.collection("Packs").findOne({_id:findPlayer.packs[i]});
+      if(findPacks !== null){
+        packInfo = {...packInfo, [`pack${i+1}`]:findPacks}
+      }
+    }
+
+ 
+
+
+    return response.status(200).json({status:200, data:packInfo, lastUpdated})
 
       } catch (error) {
         return response.status(500).json({status:500, message:error.message})

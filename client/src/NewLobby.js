@@ -35,9 +35,7 @@ const NewLobby = () => {
       })
         .then((response) => response.json())
         .then((parsed) => {
-          console.log(parsed)
           if(parsed.status===201){
-            console.log(parsed.foundNewLobby)
             localStorage.setItem("lobby_id", JSON.stringify(parsed.foundNewLobby._id));
             setLobby(parsed.foundNewLobby)
             setCurrentLobby_id(parsed.foundNewLobby._id);

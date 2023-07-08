@@ -18,10 +18,10 @@ export const LobbyProvider = ({children}) => {
     }
 })
 
-  const [lobby, setLobby, updateLastUpdated] = useLobby(currentLobby_id)
+  const [lobby, setLobby, updateLastUpdated, upToDate, setUpToDate] = useLobby(currentLobby_id)
 
   return (
-    <LobbyContext.Provider value={{currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated}}>
+    <LobbyContext.Provider value={{currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated, upToDate, setUpToDate}}>
             {children}
     </LobbyContext.Provider>
   )

@@ -61,7 +61,6 @@ const WaitingRoom = ({socket}) => {
   }, []);
 
     const readyFunction = (event) => {
-      console.log("ready pressed")
         event.preventDefault();
         fetch("/api/lobby", {
             method: "POST",
@@ -83,7 +82,6 @@ const WaitingRoom = ({socket}) => {
     }
 
     const startFunction = (event) => {
-      console.log("start pressed")
       event.preventDefault();
       fetch("/api/lobbycheck", {
         method: "POST",

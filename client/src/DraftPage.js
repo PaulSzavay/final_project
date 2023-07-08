@@ -11,10 +11,8 @@ const DraftPage = ({socket}) => {
     const [pack, setPack] = useState("")
     const [loading, setLoading] = useState(true)
 
-    const [selectedCard, setSelectedCard] = useState("")
-
     const {currentUser} = useContext(UserContext)
-    const {currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated} = useContext(LobbyContext)
+    const {currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated, upToDate} = useContext(LobbyContext)
 
     useEffect(()=>{
         if (currentLobby_id !== ""){
@@ -38,8 +36,9 @@ const DraftPage = ({socket}) => {
                 }
                 
             })
-
     },[])
+
+
 
     useEffect(()=>{
         {starterPacks !== null &&
@@ -56,17 +55,15 @@ const DraftPage = ({socket}) => {
             })
             .then((response) => response.json())
             .then((parsed) => {
-                console.log(parsed)
                 if(parsed.status===200)
                     setPack(parsed.data.pack1)
-                    setLoading(false)
+                    setLoading(false)  
             })}
     },[starterPacks])
 
 
-
     const selectCard = ( _id) => {
-
+        setPack("");
         fetch('/api/pickacard', {
             method: 'POST',
             body: JSON.stringify({
@@ -83,14 +80,10 @@ const DraftPage = ({socket}) => {
             .then((response) => response.json())
             .then((parsed) => {
                 if(parsed.status===200){
-                    setPack(parsed.pack1);                    
+                    setPack(parsed.data.pack1);                 
                 }
-
-                });
+            });
     }
-
-
-
 
 
     return (
@@ -98,7 +91,7 @@ const DraftPage = ({socket}) => {
         {!loading &&
         <Container>
             <DraftPack >
-            {pack && pack.packData.map((packContent)=>{
+            {pack !== undefined && typeof(pack) === "object" && pack.packData.map((packContent)=>{
                 // console.log(packContent[0].card_faces[0].image_uris.png)
                 return (
                     <>

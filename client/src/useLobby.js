@@ -4,6 +4,7 @@ import {useState, useEffect} from "react"
 
 const useLobby = (lobby_id) => {
     const [lobby, setLobby] = useState({lastUpdated: 0})
+    const [upToDate, setUpToDate] = useState(false)
 
     const updateLastUpdated = (lastUpdated) => {
         setLobby({...lobby, lastUpdated})
@@ -28,11 +29,14 @@ const useLobby = (lobby_id) => {
                     })
                 .then((response)=>response.json())
                 .then((parsed)=>{
+                    // console.log(parsed)
                     if(parsed.status === 200 && parsed.upToDate === false){
                         setLobby(parsed.lobby)
+                        setUpToDate(parsed.upToDate)
                     }
                     if(parsed.status === 200 && parsed.upToDate === true){
                         timer = setTimeout(keepUpToDate, 2000)
+                        setUpToDate(parsed.upToDate)
                     }
                 }
                 )
@@ -68,7 +72,7 @@ const useLobby = (lobby_id) => {
         }
     }, [lobby_id])
 
-    return [lobby, setLobby, updateLastUpdated]
+    return [lobby, setLobby, updateLastUpdated, upToDate, setUpToDate]
 }
 
 
