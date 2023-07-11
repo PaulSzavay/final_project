@@ -10,8 +10,8 @@ const options = {
   useUnifiedTopology: true,
 };
 
-const joinALobby = async (request, response) => {
-  const { _id, userName } = request.body;
+const deleteALobby = async (request, response) => {
+  const { lobby_id } = request.body;
 
   const client = new MongoClient(MONGO_URI, options);
 
@@ -19,26 +19,21 @@ const joinALobby = async (request, response) => {
     await client.connect();
     const db = client.db("MTGDraft");
 
-    const foundLobby = await db.collection("Lobby").findOne({ _id });
+    const foundLobby = await db.collection("Lobby").findOne({ _id:lobby_id });
 
-    if(foundLobby.players.length >= 8){
-      return response.status(403).json({status:403, message:"Lobby is full, create a new lobby."})
-    }
-
-    const newLobby = await db.collection("Lobby").updateOne( {_id}, { $push: { "players":{userName, partyLeader:false, isReady:false, pool:[], messages:[]}} });
+    const deleteLobby = await db.collection("Lobby").updateOne( {_id:lobby_id}, { $set: {deleted:true} });
 
     const lastUpdated = Date.now()
-    const queryDateNow = {_id:_id}
+    const queryDateNow = {_id:lobby_id}
     const changeDateNow = {$set:{lastUpdated}}
     const updateLobby = await db.collection("Lobby").updateOne(queryDateNow, changeDateNow);
 
-    const foundNewLobby = await db.collection("Lobby").findOne({_id});
+    const foundNewLobby = await db.collection("Lobby").findOne({_id:lobby_id});
 
     return response.status(200).json({
-      status: 200,
-      message: "Success",
-      foundNewLobby,
-      userName
+      status: 204,
+      message: "Lobby ended",
+      foundNewLobby
     });
 
   } catch (error) {
@@ -48,4 +43,4 @@ const joinALobby = async (request, response) => {
   }
 };
 
-module.exports = {joinALobby};
+module.exports = {deleteALobby};

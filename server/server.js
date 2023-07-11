@@ -2,11 +2,8 @@
 const express = require('express');
 const morgan = require("morgan");
 const app = express();
-const http = require('http');
-const { Server } = require("socket.io");
-const cors = require("cors")
 
-app.use(cors());
+
 app.use(express.json());
 app.use(morgan("tiny"));
 
@@ -29,6 +26,10 @@ const { pickACard } = require('./Handlers/pickACard');
 const { testDraftStarted } = require('./Handlers/testToStartDraft');
 const { UpToDate } = require('./Handlers/UpToDate');
 const { findLobbyWithLobbyId } = require('./Handlers/findLobbyWithLobbyId');
+const { pushToSideBoard } = require('./Handlers/pushToSideBoard');
+const { pushBackToPool } = require('./Handlers/pushBackToPool');
+const { sendMessage } = require('./Handlers/MessageSender');
+const { deleteALobby } = require('./Handlers/DeleteLobby');
 
 
 
@@ -58,6 +59,14 @@ app.post("/api/uptodate", UpToDate)
 
 app.post("/api/findlobbyWithLobbyId", findLobbyWithLobbyId)
 
+app.post("/api/pushToSideBoard", pushToSideBoard)
+
+app.post("/api/pushBackToPool", pushBackToPool)
+
+app.post("/api/sendMessage", sendMessage)
+
+app.post("/api/deletelobby", deleteALobby)
+
 app.get("/api/users", getUsers)
 
 app.get("/api/user/:email", getUser)
@@ -73,34 +82,10 @@ app.post("/api/oneboosterpack", getABooster)
 app.patch("/api/joinlobby", joinALobby)
 // 
 
-const server = http.createServer(app)
-
-const io = new Server(server, {
-  cors:{
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PATCH", "DELETE"],
-  }
-})
-
 const PORT = 4986
 
-io.on('connection', (socket) => {
-  console.log(`a user connected: ${socket.id}`);
 
-  socket.on("join_room", (data) => {
-    socket.join(data);
-    console.log("someone joined")
-  })
 
-  socket.on("send_message", (data) => {
-    socket.to(data.room).emit("receive_message", data);
-  });
-});
-
-server.on("error", (error) => {
-  console.error(error)
-})
-
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log("Listening on port", PORT)
 })

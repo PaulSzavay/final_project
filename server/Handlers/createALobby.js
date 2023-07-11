@@ -52,7 +52,7 @@ const createLobby = async (request, response) => {
 
     const lastUpdated = Date.now()
 
-    const newLobby = await db.collection("Lobby").insertOne({ _id:uuidv4(), packIds, players:[{userName, partyLeader:true, isReady:false, pool:[], lastPicked:""}], lastUpdated});
+    const newLobby = await db.collection("Lobby").insertOne({ _id:uuidv4(), packIds, players:[{userName, partyLeader:true, isReady:false, pool:[], lastPicked:""}], lastUpdated, phase:"Lobby", messages:[], deleted:false});
     const foundNewLobby = await db.collection("Lobby").findOne({_id:newLobby.insertedId})
 
     response.status(200).json({status: 201, message: "Success, lobby has been created", foundNewLobby, userName, lastUpdated});

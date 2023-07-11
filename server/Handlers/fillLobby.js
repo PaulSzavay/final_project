@@ -53,6 +53,10 @@ const fillLobby = async (request, response) => {
     }
 
 
+    const queryPhase = {_id}
+    const changePhase = {$set:{phase:"Draft"}}
+    const updateLobbyPhase = await db.collection("Lobby").updateOne(queryPhase, changePhase);
+
     const lastUpdated = Date.now()
     const queryDateNow = {_id}
     const changeDateNow = {$set:{lastUpdated}}
@@ -62,7 +66,6 @@ const fillLobby = async (request, response) => {
         return response.status(200).json({status:200, message:"Draft has started", lastUpdated})
 
       } catch (error) {
-        console.log(error)
         return response.status(500).json({status:500, message:error.message})
       } finally {
         client.close();

@@ -6,9 +6,10 @@ import { UserContext } from "./UserContext";
 import LobbyBackground from "./Assets/LobbyBackground.jpg";
 
 
-const JoinLobby = ({socket}) => {
+const JoinLobby = () => {
 
   const [userName, setUserName] = useState("")
+  const [errorMessage, setErrorMessage] = useState()
   const navigate = useNavigate()
 
   const {currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated} = useContext(LobbyContext);
@@ -17,9 +18,6 @@ const JoinLobby = ({socket}) => {
 
   const joinLobby = (event) => {
     event.preventDefault();
-    if (currentLobby_id !== ""){
-        socket.emit("join_room", currentLobby_id)
-    }
 
     fetch('/api/joinlobby', {
     method: 'PATCH',
@@ -34,11 +32,15 @@ const JoinLobby = ({socket}) => {
     })
     .then((response) => response.json())
     .then((parsed) => {
+      console.log(parsed)
         if(parsed.status===200){
             localStorage.setItem("lobby_id", JSON.stringify(parsed.foundNewLobby._id));
             setCurrentLobby_id(parsed.foundNewLobby._id);
             setLobby(parsed.foundNewLobby)
             navigate("/waitingroom")
+        }
+        if(parsed.status === 403){
+          setErrorMessage("Lobby is full, please create a new lobby.")
         }
     });
 }
@@ -48,6 +50,7 @@ const JoinLobby = ({socket}) => {
     <>
         <Container>
           <Title>Join a Lobby!</Title>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Form onSubmit={joinLobby}>
             <LabelDiv>
               <FormLabel>LobbyID: </FormLabel><FormInput type="text" id="id" autoComplete="off" onChange={(e) => setCurrentLobby_id(e.target.value)}></FormInput>
@@ -144,6 +147,9 @@ const FormInput = styled.input`
   &:focus {
     outline: 2px solid white;
   }
+`
+
+const ErrorMessage = styled.p`
 `
 
 

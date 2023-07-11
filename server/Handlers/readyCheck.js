@@ -13,11 +13,8 @@ const options = {
 };
 
 const readyCheck = async (request, response) => {
-    console.log(request.body)
 
     const { _id, userName, isReady } = request.body
-    console.log(isReady)
-
 
     const client = new MongoClient(MONGO_URI, options);
 

@@ -46,98 +46,23 @@ const pickACard = async (request, response) => {
 
     const pushCardIntoPlayerLastPicked = await db.collection("Lobby").updateOne(query2, change2)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // let packInfo = {}
-    // for(let i = 0; i < 3; i++){
-    //   const findPacks = await db.collection("Packs").findOne({_id:findPlayer.packs[i]});
-    //   if(findPacks !== null){
-    //     packInfo = {...packInfo, [`pack${i+1}`]:findPacks}
-    //   }
-    // }
-
-
-
-
-
-
     const getPackInfoToGetChanged = await db.collection("Lobby").findOne({ _id:lobby_id })
 
     const findPlayerInfoToGetPacksToGetChanged = getPackInfoToGetChanged.players.find((player)=>{
       return player.userName = player_userName
     })
 
-    // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
-
     // change to ["", plus remaining packs]
 
     const newArrayOfPacksToSet = findPlayerInfoToGetPacksToGetChanged.packs.shift()
 
-    // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
-
     const addEmptyString = findPlayerInfoToGetPacksToGetChanged.packs.unshift("")
-
-    // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
-
 
     const query3 = { _id: lobby_id, "players.userName": foundPlayer.userName }
     const change3 = { $set: { "players.$.packs" : findPlayerInfoToGetPacksToGetChanged.packs } }
 
     const lastPackChangedToEmptyString = await db.collection("Lobby").updateOne(query3, change3)
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const lobby2 = await db.collection("Lobby").findOne({ _id:lobby_id })
 
 
@@ -211,14 +136,8 @@ const pickACard = async (request, response) => {
 
 
         const newArrayOfPacksToSet = botPackArray.packs.shift()
-
-        // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
     
         const addEmptyString = botPackArray.packs.unshift("")
-    
-        // console.log(findPlayerInfoToGetPacksToGetChanged.packs)
-    
-
 
         // const newArrayOfBotPacksToSet = ["", botPackArray.packs[1], botPackArray.packs[2]]
     
@@ -227,9 +146,6 @@ const pickACard = async (request, response) => {
     
         const BotPackChangedToEmptyString = await db.collection("Lobby").updateOne(query3, change3)
         
-
-
-
       }
     }
 
@@ -292,7 +208,6 @@ const pickACard = async (request, response) => {
 
       const queryRemovePack1 = {_id:lobby_id}
       const changeRemovePack1 = {$set:{players}}
-
       const lobbyPassLeft = await db.collection("Lobby").updateOne(queryRemovePack1, changeRemovePack1)
     }
 
@@ -315,12 +230,15 @@ const pickACard = async (request, response) => {
       if(findPacks !== null){
         packInfo = {...packInfo, [`pack${i+1}`]:findPacks}
       }
+      if(packInfo === []){
+        return response.status(200).json({status:200, data:packInfo, lastUpdated, draft:"ended"})
+      }
     }
-
- 
 
 
     return response.status(200).json({status:200, data:packInfo, lastUpdated})
+
+
 
       } catch (error) {
         return response.status(500).json({status:500, message:error.message})

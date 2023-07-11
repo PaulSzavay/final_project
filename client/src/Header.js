@@ -47,6 +47,7 @@ position: fixed;
 top: 0;
 width: 100%;
 min-height: 6rem;
+z-index: 7000;
 `
 
 const Left = styled.div`

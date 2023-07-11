@@ -2,10 +2,12 @@ import { styled } from "styled-components";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { LobbyContext } from "./LobbyContext";
+import PlayerPool from "./PlayerPool";
+import PodRotation from "./PodRotation";
 
 
 
-const DraftPage = ({socket}) => {
+const DraftPage = () => {
 
     const [starterPacks, setStarterPacks] = useState(null)
     const [pack, setPack] = useState("")
@@ -14,11 +16,7 @@ const DraftPage = ({socket}) => {
     const {currentUser} = useContext(UserContext)
     const {currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated, upToDate} = useContext(LobbyContext)
 
-    useEffect(()=>{
-        if (currentLobby_id !== ""){
-            socket.emit("join_room", currentLobby_id)
-        }
-    }, [socket]);
+
 
     useEffect(()=>{
         fetch("/api/findlobby", {
@@ -85,14 +83,15 @@ const DraftPage = ({socket}) => {
             });
     }
 
+    console.log(pack)
 
     return (
         <>
         {!loading &&
         <Container>
+            <PodRotation />
             <DraftPack >
             {pack !== undefined && typeof(pack) === "object" && pack.packData.map((packContent)=>{
-                // console.log(packContent[0].card_faces[0].image_uris.png)
                 return (
                     <>
                     {packContent.isPicked===false && 
@@ -102,10 +101,10 @@ const DraftPage = ({socket}) => {
                         onDoubleClick={()=>{selectCard(packContent._id)}}
                         id={packContent._id}
                         >
-                        {/* {packContent.card.card_faces ? <Image key={packContent.card.multiverse_ids} src={packContent.card.card_faces[0].image_uris.png}/> */}
-                        {/* : */}
-                        <Image key={packContent.card.multiverse_ids} src={packContent.card.image_uris.png}/>
-                        {/* } */}
+                        {packContent.card.image_uris.png ? <Image key={packContent.card.multiverse_ids} src={packContent.card.image_uris.png}/>
+                        :
+                        <Image key={packContent.card.multiverse_ids} src={packContent.card.card_faces[0].image_uris.png}/>
+                        }
                         </ImageButton>
                         <Name key={packContent.card.name}>{packContent.card.name}</Name>
                     </ImageDiv>}
@@ -115,6 +114,7 @@ const DraftPage = ({socket}) => {
             </DraftPack>
         </Container>
         }
+        {!loading && <PlayerPool/>}
         </>
     )
 };
@@ -123,11 +123,10 @@ export default DraftPage
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center; 
   align-items: center;
   margin:0;
-  height: 110vh;
 
 `;
 
@@ -144,8 +143,9 @@ margin: 0;
 const DraftPack = styled.div`
 display: grid;
 grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-margin: 10% 25% 0 25%;
+margin: 0 33%;
 text-align: center;
+
 `
 
 const ImageDiv = styled.div`

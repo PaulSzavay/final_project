@@ -4,11 +4,11 @@ import { LobbyContext } from "./LobbyContext";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import WaitingroomBackground from "./Assets/WaitingRoomBackground3.jpg"
+import Messenger from "./Messenger";
 
-const WaitingRoom = ({socket}) => {
+const WaitingRoom = () => {
 
-    const [message, setMessage] = useState("")
-    const [messageReceived, setMessageReceived] = useState("")
+
     const [room, setRoom] = useState("")
     const [loading, setLoading] = useState(true)
     const [ready, setReady] = useState(false)
@@ -23,21 +23,6 @@ const WaitingRoom = ({socket}) => {
         setLoading(false)
     }, [currentUser])
     
-    const sendMessage = () => {
-        socket.emit("send_message", { message, room });
-    };
-
-    useEffect(()=>{
-        socket.on("receive_message", (data) => {
-            setMessageReceived(data.message);
-        });
-    }, [socket]);
-
-    useEffect(()=>{
-        if (currentLobby_id !== ""){
-            socket.emit("join_room", currentLobby_id)
-        }
-    }, [socket]);
 
     useEffect(()=>{
       fetch("/api/partyleadercheck", {
@@ -117,6 +102,7 @@ const WaitingRoom = ({socket}) => {
       })
         .then((response) => response.json())
         .then((parsed) => {
+          console.log(parsed)
           navigate("/draftPage");
         })
         .catch((error) => {
@@ -129,26 +115,53 @@ const WaitingRoom = ({socket}) => {
       setAskIfFull("");
     }
 
+    const deleteFunction = (event) => {
+      event.preventDefault();
+      fetch("/api/deletelobby", {
+        method: "POST",
+        body: JSON.stringify({ lobby_id:currentLobby_id}),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((parsed) => {
+          if(parsed.status===204){
+            console.log(parsed)
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
 
-    // TODO phase instead of players.length
     if(lobby.lastUpdated !== 0 && lobby.players.length === 8 && lobby.players.every((player)=>{return player.isReady})){
       navigate("/draftPage");
     }
 
+    console.log(lobby.deleted)
+
 
     return (
+      <>
+      {lobby.deleted === true && lobby.lastUpdated !== 0 &&
+      <Container >
+        <Deleted>Lobby has been deleted &#128557;</Deleted>
+      </Container>
+      }
+      {lobby.deleted === false && lobby.lastUpdated !== 0 &&
+      <Container>
         <>
-        {loading? <h1>loading...</h1> :
+        {lobby.lastUpdated === 0 || loading ? <h1>loading...</h1> :
         <Container>
           <Title>Waiting Room</Title>
           <RoomInfoDiv>
             {currentLobby_id && <RoomId>Room ID: {currentLobby_id}</RoomId>}
             {currentUser && <UserName>Username: {currentUser}</UserName>}
           </RoomInfoDiv>
-            <MessengerForm>
-              <Input placeholder="Message..." onChange={(event)=>{setMessage(event.target.value)}}/>
-              <Button onClick={sendMessage}>Send Message</Button>
-            </MessengerForm>
+          <Bottom>
+          <Left>
             <ButtonDiv>
             <Button onClick={readyFunction}>{!ready?"Ready":"Unready"}</Button>
             {partyLeader === currentUser && <Button 
@@ -158,6 +171,8 @@ const WaitingRoom = ({socket}) => {
               })
             }
             onClick={startFunction}>Start</Button>}
+            {partyLeader === currentUser && <Button 
+            onClick={deleteFunction}>Delete</Button>}
             </ButtonDiv>
             {askIfFull < 7 && (typeof(askIfFull) === "number") && 
             <StartDiv>
@@ -166,10 +181,16 @@ const WaitingRoom = ({socket}) => {
               <StartButton onClick={yesFunction}>Yes</StartButton>
               <StartButton onClick={noFunction}>No</StartButton>
             </StartDiv> }
-            <Messages>Messages: {messageReceived}</Messages>
+            </Left>
+            <Right>
+            <Messenger/>
+            </Right>
+            </Bottom>
         </Container>
         }
         </>
+        </Container>}
+      </>
     )
 }
 
@@ -181,6 +202,8 @@ const Container = styled.div`
   background-size: cover;
   color: rgb(227, 204, 174);
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   overflow: hidden;
   height: 100vh;
@@ -211,6 +234,10 @@ font-size: 2rem;
 
 `
 
+const Deleted = styled.h1`
+font-size: 3rem;
+`
+
 const MessengerForm = styled.form`
 margin-left: 3rem;
 `
@@ -223,7 +250,6 @@ margin-top: 2rem;
 `
 
 const Messages = styled.p`
-margin-left: 5rem;
 font-size: 1.75rem;
 `
 
@@ -281,7 +307,7 @@ const Button = styled.button`
 `
 
 const StartDiv = styled.div`
-width: 33%;
+width: 50%;
 display: flex;
 flex-direction: column;
 justify-content: center;
@@ -335,4 +361,17 @@ const StartButton = styled.button`
   box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
   transform: translateY(0);
 }
+`
+
+const Bottom = styled.div`
+display: flex;
+
+`
+
+const Left = styled.div`
+width: 50%;
+`
+
+const Right = styled.div`
+width: 50%;
 `
