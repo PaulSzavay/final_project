@@ -102,7 +102,6 @@ const WaitingRoom = () => {
       })
         .then((response) => response.json())
         .then((parsed) => {
-          console.log(parsed)
           navigate("/draftPage");
         })
         .catch((error) => {
@@ -140,8 +139,6 @@ const WaitingRoom = () => {
       navigate("/draftPage");
     }
 
-    console.log(lobby.deleted)
-
 
     return (
       <>
@@ -154,7 +151,7 @@ const WaitingRoom = () => {
       <Container>
         <>
         {lobby.lastUpdated === 0 || loading ? <h1>loading...</h1> :
-        <Container>
+        <>
           <Title>Waiting Room</Title>
           <RoomInfoDiv>
             {currentLobby_id && <RoomId>Room ID: {currentLobby_id}</RoomId>}
@@ -186,7 +183,7 @@ const WaitingRoom = () => {
             <Messenger/>
             </Right>
             </Bottom>
-        </Container>
+        </>
         }
         </>
         </Container>}

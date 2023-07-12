@@ -4,6 +4,7 @@ import { UserContext } from "./UserContext";
 import { LobbyContext } from "./LobbyContext";
 import PlayerPool from "./PlayerPool";
 import PodRotation from "./PodRotation";
+import { useNavigate, Navigate } from "react-router-dom";
 
 
 
@@ -15,6 +16,9 @@ const DraftPage = () => {
 
     const {currentUser} = useContext(UserContext)
     const {currentLobby_id, setCurrentLobby_id, lobby, setLobby, updateLastUpdated, upToDate} = useContext(LobbyContext)
+
+
+    const navigate = useNavigate();
 
 
 
@@ -83,7 +87,15 @@ const DraftPage = () => {
             });
     }
 
-    console.log(pack)
+    if(lobby.lastUpdate !== 0 && !loading){
+        const draftEndedCheck = lobby.players.every((player)=>{
+            return player.packs.length === 0
+        })
+        if( draftEndedCheck ){
+            return <Navigate to={`/EndLobby/${lobby._id}`}/>
+        }}
+
+
 
     return (
         <>

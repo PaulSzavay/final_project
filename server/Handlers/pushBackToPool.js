@@ -13,8 +13,6 @@ const options = {
 const pushBackToPool = async (request, response) => {
   const { lobby_id, userName, card_id } = request.body;
 
-  console.log(request.body)
-
   const client = new MongoClient(MONGO_URI, options);
 
   try {
@@ -35,8 +33,6 @@ const pushBackToPool = async (request, response) => {
     const changePushToPool = { $push: { "players.$.pool" : findCard } }
     const updateLobbyPushPool = await db.collection("Lobby").updateOne(queryPushToPool, changePushToPool);
 
-    console.log("pool done")
-
         let index = []
     const removeCardFromPool = findPlayer.Sideboard.find((card)=>{
         index.push(card._id)
@@ -48,8 +44,6 @@ const pushBackToPool = async (request, response) => {
     const queryRemoveFromSideboard = {_id:lobby_id, "players.userName": findPlayer.userName }
     const changeRemoveFromSideboard = { $set: { "players.$.Sideboard" : findPlayer.Sideboard } }
     const updateLobbyRemoveFromSideboard  = await db.collection("Lobby").updateOne(queryRemoveFromSideboard, changeRemoveFromSideboard);
-
-    console.log("sideboard done")
 
     const lastUpdated = Date.now()
     const queryDateNow = {_id:lobby_id}

@@ -35,9 +35,34 @@ useEffect(()=>{
   })
 },[currentUser]);
 
+const [drafts, setDrafts] = useState([]);
+
+useEffect(()=>{
+  currentUser && 
+  fetch("/api/findDrafts", {
+    method: 'POST',
+    body: JSON.stringify({
+        email: currentUser,
+    }),
+    headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        },
+    })
+  .then((response) => response.json())
+  .then((parsed) => {
+    if(parsed.status === 200){
+      setDrafts(parsed.Drafts)
+    }
+    })
+  .catch((error) => {
+      console.log(error)
+  })
+},[currentUser]);
+
 // passing currentUser, setCurrentUser, loggedInUser, setLoggedInUser to all children
   return (
-    <UserContext.Provider value={{currentUser, setCurrentUser, loggedInUser, setLoggedInUser}}>
+    <UserContext.Provider value={{currentUser, setCurrentUser, loggedInUser, setLoggedInUser, drafts, setDrafts}}>
             {children}
     </UserContext.Provider>
   )

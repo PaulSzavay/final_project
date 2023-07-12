@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, Fragment } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { LobbyContext } from "./LobbyContext";
@@ -113,7 +113,6 @@ const handleClickItem3 = (item) => {
       })
         .then((response) => response.json())
         .then((parsed) => {
-          console.log(parsed)
           if(parsed.status===201){
             localStorage.setItem("lobby_id", JSON.stringify(parsed.foundNewLobby._id));
             setLobby(parsed.foundNewLobby)
@@ -294,7 +293,6 @@ const handleClickItem3 = (item) => {
   }, [selectedSuggestionIndex3]);
 
 
-
   return (
     <>
         <Container>
@@ -317,9 +315,9 @@ const handleClickItem3 = (item) => {
                 const { firstHalf1, secondHalf1 } = getHighlightedText(set.name);
                 const isSelected = matchedItems[selectedSuggestionIndex] === set;
                 return(
-                  <>
+                  <Fragment key={set.id}>
                   {isMenuVisible && booster1.length > 1 && 
-                  <SetDiv ref={setsRef}
+                  <SetDiv  ref={setsRef}
                   onClick={() => handleClickItem  (set.name)}
                   onMouseEnter={() => setSelectedSuggestionIndex(index)}
                   className={isSelected ? 'selected' : ''}
@@ -330,7 +328,7 @@ const handleClickItem3 = (item) => {
                     </Sets>
                     <Image src={set.icon_svg_uri} />
                   </SetDiv>}
-                  </>
+                  </Fragment>
                 )
               })
             }
@@ -353,9 +351,9 @@ const handleClickItem3 = (item) => {
                 const { firstHalf2, secondHalf2 } = getHighlightedText2(set.name);
                 const isSelected2 = matchedItems2[selectedSuggestionIndex2] === set;
                 return(
-                  <>
+                  <Fragment key={set.id}>
                   {isMenuVisible2 && booster2.length > 1 && 
-                  <SetDiv ref={setsRef2}
+                  <SetDiv  ref={setsRef2}
                   onClick={() => handleClickItem2(set.name)}
                   onMouseEnter={() => setSelectedSuggestionIndex2(index)}
                   className={isSelected2 ? 'selected' : ''}
@@ -366,7 +364,7 @@ const handleClickItem3 = (item) => {
                     </Sets>
                     <Image src={set.icon_svg_uri} />
                   </SetDiv>}
-                  </>
+                  </Fragment>
                 )
               })
             }
@@ -389,9 +387,9 @@ const handleClickItem3 = (item) => {
                 const { firstHalf3, secondHalf3 } = getHighlightedText3(set.name);
                 const isSelected3 = matchedItems3[selectedSuggestionIndex3] === set;
                 return(
-                  <>
+                  <Fragment key={set.id}>
                   {isMenuVisible3 && booster3.length > 1 && 
-                  <SetDiv ref={setsRef3}
+                  <SetDiv  ref={setsRef3}
                   onClick={() => handleClickItem3(set.name)}
                   onMouseEnter={() => setSelectedSuggestionIndex3(index)}
                   className={isSelected3 ? 'selected' : ''}
@@ -402,7 +400,7 @@ const handleClickItem3 = (item) => {
                     </Sets>
                     <Image src={set.icon_svg_uri} />
                   </SetDiv>}
-                  </>
+                  </Fragment>
                 )
               })
             }

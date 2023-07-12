@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, Fragment } from "react"
 import { UserContext } from "./UserContext"
 import { LobbyContext } from "./LobbyContext"
 import { styled } from "styled-components";
@@ -24,67 +24,67 @@ const PlayerPool = () => {
     })
 
     const foundCards0CMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 0 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 0 && card.card.type_line.includes("Creature")
     })
 
     const foundCards1CMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 1 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 1 && card.card.type_line.includes("Creature")
     })
 
     const foundCards2CMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 2 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 2 && card.card.type_line.includes("Creature")
     })
 
     const foundCards3CMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 3 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 3 && card.card.type_line.includes("Creature")
     })
 
     const foundCards4CMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 4 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 4 && card.card.type_line.includes("Creature")
     })
 
     const foundCards5CMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 5 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 5 && card.card.type_line.includes("Creature")
     })
 
     const foundCards6CMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 6 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 6 && card.card.type_line.includes("Creature")
     })
 
     const foundCards7OrMoreCMCCreature = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc >= 7 && card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc >= 7 && card.card.type_line.includes("Creature")
     })
 
     const foundCards0CMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 0 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 0 && !card.card.type_line.includes("Creature")
     })
 
     const foundCards1CMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 1 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 1 && !card.card.type_line.includes("Creature")
     })
 
     const foundCards2CMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 2 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 2 && !card.card.type_line.includes("Creature")
     })
 
     const foundCards3CMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 3 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 3 && !card.card.type_line.includes("Creature")
     })
 
     const foundCards4CMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 4 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 4 && !card.card.type_line.includes("Creature")
     })
 
     const foundCards5CMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 5 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 5 && !card.card.type_line.includes("Creature")
     })
 
     const foundCards6CMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc === 6 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc === 6 && !card.card.type_line.includes("Creature")
     })
 
     const foundCards7OrMoreCMCSpell = currentPlayer.pool.filter((card)=>{
-        return card.card.cmc >= 7 && !card.card.type_line.includes("Creature")
+        return card !==null && card.card.cmc >= 7 && !card.card.type_line.includes("Creature")
     })
 
 
@@ -139,88 +139,88 @@ return (
                     <One id="0">
                     {foundCards0CMCCreature && foundCards0CMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </One>
                     <Two id="1">
                     {foundCards1CMCCreature && foundCards1CMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Two>
                     <Three id="2">
                     {foundCards2CMCCreature && foundCards2CMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Three>
                     <Four id="3">
                     {foundCards3CMCCreature && foundCards3CMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Four>
                     <Five id="4">
                     {foundCards4CMCCreature && foundCards4CMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Five>
                     <Six id="5">
                     {foundCards5CMCCreature && foundCards5CMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Six>
                     <Seven id="6">
                     {foundCards6CMCCreature && foundCards6CMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Seven>
                     <Eight id="7">
                     {foundCards7OrMoreCMCCreature && foundCards7OrMoreCMCCreature.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Eight>
@@ -229,88 +229,88 @@ return (
             <One id="0">
                     {foundCards0CMCSpell && foundCards0CMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </One>
                     <Two id="1">
                     {foundCards1CMCSpell && foundCards1CMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Two>
                     <Three id="2">
                     {foundCards2CMCSpell && foundCards2CMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Three>
                     <Four id="3">
                     {foundCards3CMCSpell && foundCards3CMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Four>
                     <Five id="4">
                     {foundCards4CMCSpell && foundCards4CMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Five>
                     <Six id="5">
                     {foundCards5CMCSpell && foundCards5CMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Six>
                     <Seven id="6">
                     {foundCards6CMCSpell && foundCards6CMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Seven>
                     <Eight id="7">
                     {foundCards7OrMoreCMCSpell && foundCards7OrMoreCMCSpell.map((card)=>{
                         return (
-                            <>
+                            <Fragment key={card._id}>
                             <ImageDiv onDoubleClick={()=>handleClick(card)}>
-                                <Image key={card._id}  value={card} src={card.card.image_uris.png}/>
+                                <Image value={card} src={card.card.image_uris.png}/>
                             </ImageDiv>    
-                            </>
+                            </Fragment>
                         )
                     })}
                     </Eight>
@@ -322,11 +322,11 @@ return (
         <div>
             {currentPlayer.Sideboard && currentPlayer.Sideboard.map((cards)=>{
                 return (
-                    <>
+                    <Fragment key={cards._id}>
                     <ImageDiv onDoubleClick={()=>handleClick2(cards)}>
-                    <Image key={cards._id} src={cards.card.image_uris.png}/>
+                    <Image src={cards.card.image_uris.png}/>
                     </ImageDiv>
-                    </>
+                    </Fragment>
                 )
             })}
         </div>

@@ -12,7 +12,6 @@ const options = {
 const findLobby = async (request, response) => {
     const { _id, userName } = request.body
 
-
   const client = new MongoClient(MONGO_URI, options);
 
   try{

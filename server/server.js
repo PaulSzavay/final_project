@@ -30,6 +30,10 @@ const { pushToSideBoard } = require('./Handlers/pushToSideBoard');
 const { pushBackToPool } = require('./Handlers/pushBackToPool');
 const { sendMessage } = require('./Handlers/MessageSender');
 const { deleteALobby } = require('./Handlers/DeleteLobby');
+const { saveDraft } = require('./Handlers/saveDraft');
+const { findDrafts } = require('./Handlers/DisplayDrafts');
+const { getDraft } = require('./Handlers/FindDraft');
+
 
 
 
@@ -67,6 +71,8 @@ app.post("/api/sendMessage", sendMessage)
 
 app.post("/api/deletelobby", deleteALobby)
 
+app.post("/api/updateprofile", saveDraft)
+
 app.get("/api/users", getUsers)
 
 app.get("/api/user/:email", getUser)
@@ -80,6 +86,11 @@ app.post("/api/createlobby", createLobby)
 app.post("/api/oneboosterpack", getABooster)
 
 app.patch("/api/joinlobby", joinALobby)
+
+app.post("/api/findDrafts", findDrafts)
+
+app.post("/api/draft", getDraft)
+
 // 
 
 const PORT = 4986

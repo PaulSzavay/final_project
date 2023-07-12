@@ -25,7 +25,8 @@ const Header = () => {
         <MainSiteLink to="/">Draft Site</MainSiteLink>
     </Middle>
     <Right>
-        <SignInLink to="/signin">{currentUser ? `Hello ${loggedInUser}` : "Sign In"}</SignInLink>
+        {!currentUser && <SignInLink to="/signin">Sign In</SignInLink>}
+        {currentUser && <SignInLink to="/profile">Hello {loggedInUser}</SignInLink>}
         <SignOutLink to="/" onClick={signOut}>{currentUser && "Sign Out"}</SignOutLink>
     </Right>
     </HeaderBox>

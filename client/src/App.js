@@ -8,6 +8,9 @@ import NewLobby from './NewLobby';
 import WaitingRoom from './WaitingRoom';
 import JoinLobby from './JoinLobby';
 import DraftPage from './DraftPage';
+import EndLobby from './EndLobby';
+import Profile from './Profile';
+import ReviewDraft from './ReviewDraft';
 
 
 
@@ -28,6 +31,9 @@ const App = () => {
         <Route path="/JoinLobby" element={<JoinLobby />} />
         <Route path="/waitingroom" element={<WaitingRoom />} />
         <Route path="/DraftPage" element={<DraftPage />} />
+        <Route path="/EndLobby/:lobby_id" element={<EndLobby />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/Draft/:lobby_id" element={<ReviewDraft />} />
       </Routes>
     </Router>
     </>
