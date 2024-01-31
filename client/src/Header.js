@@ -19,10 +19,12 @@ const Header = () => {
     <>
     <HeaderBox>
     <Left>
+        <MainSiteLink to="/">
         <Logo src={cards}/>
+        </MainSiteLink>
     </Left>
     <Middle>
-        <MainSiteLink to="/">Draft Site</MainSiteLink>
+        <MainSiteLink to="/">Kavu Academy</MainSiteLink>
     </Middle>
     <Right>
         {!currentUser && <SignInLink to="/signin">Sign In</SignInLink>}

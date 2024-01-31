@@ -157,14 +157,14 @@ const Button = styled.button`
 
 
 const MessengerSection = styled.div`
+width: 58rem;
+min-height: 25rem;
 margin: 2rem;
 padding: 0 1rem;
 border-radius: 1rem;
 display: flex;
 flex-direction: column;
-
 overflow-y: auto;
-height: 20rem;
 color: rgb(184, 98, 27);
 background-color: rgb(227, 204, 174);
 `

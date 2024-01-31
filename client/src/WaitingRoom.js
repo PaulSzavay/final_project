@@ -135,9 +135,12 @@ const WaitingRoom = () => {
         });
     }
 
-    if(lobby.lastUpdated !== 0 && lobby.players.length === 8 && lobby.players.every((player)=>{return player.isReady})){
+    if(lobby.lastUpdated !== 0 && lobby.players.length === 8 && lobby.players.every((player)=>{
+      return player.isReady})){
       navigate("/draftPage");
     }
+
+    console.log(lobby.players.every((player)=>{return player.isReady}))
 
 
     return (

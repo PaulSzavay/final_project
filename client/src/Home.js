@@ -28,7 +28,7 @@ const Home = () => {
           <>
           <HowTo onClick={howToFunction}>How To</HowTo>
           <WelcomeDiv>
-            <Welcome>Welcome to Draft Site</Welcome>
+            <Welcome>Welcome to Kavu Academy</Welcome>
             {!currentUser && <SignInTitle>Please Sign In to start Drafting!</SignInTitle>}
             {currentUser && <CreateALobbyButton to="/NewLobby">Create a New Lobby!</CreateALobbyButton>}
             {currentUser && <JoinALobbyButton to="/JoinLobby">Join a Lobby!</JoinALobbyButton>}

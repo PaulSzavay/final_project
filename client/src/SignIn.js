@@ -42,6 +42,10 @@ const SignIn = () => {
   }, [currentUser]);
 
 
+  const navigateToSignUp = () => {
+    navigate("/SignUp")
+  }
+
 
   return (
     <>
@@ -66,7 +70,7 @@ const SignIn = () => {
             <SignInButton>Sign In!</SignInButton>
           </Form>
           <SignUpTitle>Don't have an account?</SignUpTitle>
-          <SignUpButton to="/signup">Sign Up!</SignUpButton>
+          <SignUpButton onClick={navigateToSignUp}>Sign Up!</SignUpButton>
         </FormBox>
       </Container>
     </>

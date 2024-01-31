@@ -133,7 +133,7 @@ return (
     <>
     <PoolandSideboardDiv>
     <Pool >
-        <h1>Pool:</h1>
+        <h1>Deck:</h1>
         <DraftGrid>
             <Creatures>
                     <One id="0">

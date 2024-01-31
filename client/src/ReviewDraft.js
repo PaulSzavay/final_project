@@ -120,16 +120,18 @@ const ReviewDraft = () => {
     })
 
 
+
     return (
 
         <>
         <PoolandSideboardDiv>
         <Pool >
         <HeaderDiv>
-            <CardNumbers>Pool:</CardNumbers>
+            <CardNumbers>Deck:</CardNumbers>
             </HeaderDiv>
             <HeaderDiv>
             <CardNumbers>Non Lands: {nonLands.length}</CardNumbers>
+            <CardNumbers> Lands: {landCards.length} </CardNumbers>
             </HeaderDiv>
             <HeaderDiv>
             <CardNumbers> Basics:</CardNumbers>

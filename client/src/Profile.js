@@ -2,7 +2,8 @@ import { styled } from "styled-components";
 import ProfileBackground from "./Assets/ProfileBackground.jpg"
 import { Fragment, useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+
 
 
 
@@ -10,10 +11,13 @@ const Profile = () => {
 
     const {currentUser, setCurrentUser, loggedInUser, setLoggedInUser, drafts, setDrafts} = useContext(UserContext);
 
+    const navigate = useNavigate()
+
     const reviewDraft = (draft) => {
-        return <Navigate to={`/Draft/${draft._id}`} />
+      navigate(`/Draft/${draft._id}`)
     }
 
+    console.log(drafts)
  
     return (
         <Container>

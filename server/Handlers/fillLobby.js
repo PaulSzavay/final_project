@@ -9,13 +9,13 @@ const options = {
   useUnifiedTopology: true,
 };
 
-    const botArray = [{"userName":"Bot1", pool:[], lastPicked:""},
-                      {"userName":"Bot2", pool:[], lastPicked:""}, 
-                      {"userName":"Bot3", pool:[], lastPicked:""}, 
-                      {"userName":"Bot4", pool:[], lastPicked:""}, 
-                      {"userName":"Bot5", pool:[], lastPicked:""}, 
-                      {"userName":"Bot6", pool:[], lastPicked:""}, 
-                      {"userName":"Bot7", pool:[], lastPicked:""}]
+    const botArray = [{"userName":"Bot1", pool:[], lastPicked:"", isReady:true},
+                      {"userName":"Bot2", pool:[], lastPicked:"", isReady:true}, 
+                      {"userName":"Bot3", pool:[], lastPicked:"", isReady:true}, 
+                      {"userName":"Bot4", pool:[], lastPicked:"", isReady:true}, 
+                      {"userName":"Bot5", pool:[], lastPicked:"", isReady:true}, 
+                      {"userName":"Bot6", pool:[], lastPicked:"", isReady:true}, 
+                      {"userName":"Bot7", pool:[], lastPicked:"", isReady:true}]
 
 const fillLobby = async (request, response) => {
     const { _id, numberOfPlayers } = request.body

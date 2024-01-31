@@ -35,12 +35,6 @@ const { findDrafts } = require('./Handlers/DisplayDrafts');
 const { getDraft } = require('./Handlers/FindDraft');
 
 
-
-
-app.get('/helloworld', (req, res) => {
-  res.status(200).json({status:200, message:"Hello World!"})
-})
-
 app.post("/api/signin", signIn)
 
 app.post("/api/signup", signUp)
